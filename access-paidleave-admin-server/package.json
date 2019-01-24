@@ -1,0 +1,48 @@
+{
+  "name": "access-paidleave-admin-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "JaeJun.Lee",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/async": "^2.4.0",
+    "@types/bcrypt-nodejs": "0.0.30",
+    "@types/body-parser": "^1.17.0",
+    "@types/compression": "0.0.36",
+    "@types/connect-mongo": "0.0.40",
+    "@types/errorhandler": "0.0.32",
+    "@types/express": "^4.16.1",
+    "@types/express-session": "^1.15.11",
+    "@types/lusca": "^1.5.0",
+    "@types/mongodb": "^3.1.19",
+    "@types/mongoose": "^5.3.9",
+    "@types/node": "^10.12.18",
+    "@types/request": "^2.48.1",
+    "@types/winston": "^2.4.4",
+    "jest": "^23.6.0",
+    "nodemon": "^1.18.9",
+    "ts-jest": "^23.10.5",
+    "ts-node": "^8.0.1",
+    "typescript": "^3.2.4"
+  },
+  "scripts": {
+    "start": "./runserver.ts",
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "async": "^2.6.1",
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.18.3",
+    "compression": "^1.7.3",
+    "connect-mongo": "^2.0.3",
+    "errorhandler": "^1.5.0",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "express-validator": "^5.3.1",
+    "lusca": "^1.6.1",
+    "reflect-metadata": "^0.1.13",
+    "request": "^2.88.0",
+    "typeorm": "^0.2.12",
+    "winston": "^3.1.0"
+  }
+}
