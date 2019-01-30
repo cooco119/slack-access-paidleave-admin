@@ -288,7 +288,7 @@ export default class AccessHandler {
 
     switch(scope){
       case 'daily':
-        [year, month, day] = date.split('.');
+        [year, month, day] = date.split('-');
         for (let name of nameList){
           const res = await this.searchDaily(name, year, month, day);
           if (res === null){
@@ -297,6 +297,7 @@ export default class AccessHandler {
           }
           const data = {
             "name": name.split('.')[0],
+            "date": date,
             "duration": res.duration,
             "attend": res.attend,
             "goHome": res.goHome
@@ -306,7 +307,7 @@ export default class AccessHandler {
         break;
 
       case 'weekly':
-        [year, month, week] = date.split('.');
+        [year, month, week] = date.split('-');
         for (let name of nameList){
           const res = await this.searchWeekly(name, year, month, week);
           if (res === null){
@@ -315,6 +316,8 @@ export default class AccessHandler {
           }
           const data = {
             "name": name.split('.')[0],
+            "date": year+'년 '+month+'월',
+            "week": week,
             "duration": res.duration
           };
           resultList.push(data);
@@ -323,7 +326,7 @@ export default class AccessHandler {
 
       case 'monthly':
         console.log("Entering Monthly");
-        [year, month] = date.split('.');
+        [year, month] = date.split('-');
         for (let name of nameList){
           const res = await this.searchMonthly(name, year, month);
           if (res === null){
@@ -332,6 +335,7 @@ export default class AccessHandler {
           }
           const data = {
             "name": name.split('.')[0],
+            "date": date,
             "duration": res.duration
           };
           resultList.push(data);

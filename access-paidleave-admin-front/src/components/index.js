@@ -7,6 +7,10 @@ import StatsCard from "./Cards/StatsCard.vue";
 import NavTabsTable from "./Tables/NavTabsTable.vue";
 import OrderedTable from "./Tables/OrderedTable.vue";
 import SimpleTable from "./Tables/SimpleTable.vue";
+import PaidleaveTable from "./Tables/PaidleaveTable.vue";
+import AccessTableDaily from "./Tables/AccessTableDaily.vue";
+import AccessTableWeekly from "./Tables/AccessTableWeekly.vue";
+import AccessTableMonthly from "./Tables/AccessTableMonthly.vue";
 
 export {
   ChartCard,
@@ -14,5 +18,9 @@ export {
   StatsCard,
   NavTabsTable,
   OrderedTable,
-  SimpleTable
+  SimpleTable,
+  PaidleaveTable,
+  AccessTableDaily,
+  AccessTableWeekly,
+  AccessTableMonthly
 };

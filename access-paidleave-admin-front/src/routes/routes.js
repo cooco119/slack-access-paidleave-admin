@@ -1,8 +1,8 @@
 import DashboardLayout from "@/pages/Layout/DashboardLayout.vue";
 
 import Dashboard from "@/pages/Dashboard.vue";
-import AccessTable from "@/pages/AccessTable.vue";
-import PaidLeaveTable from "@/pages/PaidLeaveTable.vue";
+import AccessTable from "@/pages/AccessSearch.vue";
+import PaidLeaveTable from "@/pages/PaidLeaveSearch.vue";
 
 const routes = [
   {
