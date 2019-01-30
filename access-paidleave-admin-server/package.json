@@ -26,7 +26,7 @@
     "typescript": "^3.2.4"
   },
   "scripts": {
-    "start": "./runserver.ts",
+    "start": "ts-node src/app.ts",
     "build": "tsc -p tsconfig.json"
   },
   "dependencies": {
@@ -37,9 +37,12 @@
     "connect-mongo": "^2.0.3",
     "errorhandler": "^1.5.0",
     "express": "^4.16.4",
+    "express-http-proxy": "^1.5.1",
     "express-session": "^1.15.6",
     "express-validator": "^5.3.1",
+    "http": "0.0.0",
     "lusca": "^1.6.1",
+    "papaparse": "^4.6.3",
     "reflect-metadata": "^0.1.13",
     "request": "^2.88.0",
     "typeorm": "^0.2.12",

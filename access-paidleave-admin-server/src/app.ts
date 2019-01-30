@@ -1,31 +1,38 @@
 import * as bodyParser from 'body-parser';
 import * as logger from 'winston';
-import {createConnection} from 'typeorm';
-import {User} from './models/entity/User';
-
-
-const API_PORT = 3001;
+import AccessHandler from './access_handler';
+import PaidleaveHandler from './paidleave_handler';
 const express = require('express');
+const proxy = require('express-http-proxy');
+const http = require('http');
+
+const API_PORT = 8000;
 const app = express();
-const router = express.Router();
+const port = 8000;
+const front_url = "localhost:8080"
 
-createConnection().then(async (connection) => {
-  console.log("Connected to database");
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-  let userRepo = connection.getRepository(User);
-  let usersCount = await userRepo.count();
+// @ts-ignore
+app.get('/api/v1/access?', (req, res) => {
+  (new AccessHandler()).handle(req.query)
+  .then( response => {
+    console.log(response);
+    res.status(200).json(response);
+  })
+})
+// @ts-ignore
+app.get('/api/v1/paidleave?', (req, res) => {
+  console.log(req.query);
+  (new PaidleaveHandler()).handle(req.query)
+  .then(response => {
+    console.log(response);
+    res.status(200).json(response);
+  })
+})
+app.use('/', proxy(front_url));
 
-  if (usersCount === 0){
-    console.log("No Users Exists. Creating admin user.")
-    let admin = new User();
-    admin.name = "admin";
-    admin.id = "admin";
-    admin.password = "secret";
-    await userRepo.save(admin);
-  }
-
-  app.use(bodyParser.urlencoded({ extended: false }));
-  app.use(bodyParser.json());
-  app.use(require('./controllers'));
-
-}).catch(error => console.log(error));
+http.createServer(app).listen(port, () => {
+  console.log(`Proxy server listening on port ${port}`);
+})
