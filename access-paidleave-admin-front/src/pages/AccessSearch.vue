@@ -119,7 +119,6 @@
 <script>
 import { AccessTableDaily, AccessTableWeekly, AccessTableMonthly } from "@/components";
 const queryString = require('query-string');
-const request = require('request');
 
 export default {
   data: () => ({
@@ -160,7 +159,9 @@ export default {
             let tmp = await res.json();
             tmp = JSON.parse(JSON.stringify(tmp));
             console.log(tmp.result[0]);
-            self.table_data_day.push(tmp.result[0]);
+            for (let i = 0; i < tmp.result.length; i++){
+              self.table_data_day.push(tmp.result[i]);
+            }
             console.log(self.table_data_day);
           })
           break;
@@ -183,8 +184,10 @@ export default {
           }).then( async res => {
             let tmp = await res.json();
             tmp = JSON.parse(JSON.stringify(tmp));
-            console.log(tmp.result[0]);
-            self.table_data_week.push(tmp.result[0]);
+            console.log(tmp.result);
+            for (let i = 0; i < tmp.result.length; i++){
+              self.table_data_week.push(tmp.result[i]);
+            }
             console.log(self.table_data_week);
           })
           break;
@@ -208,7 +211,9 @@ export default {
             let tmp = await res.json();
             tmp = JSON.parse(JSON.stringify(tmp));
             console.log(tmp.result[0]);
-            self.table_data_month.push(tmp.result[0]);
+            for (let i = 0; i < tmp.result.length; i++){
+              self.table_data_month.push(tmp.result[i]);
+            }
             console.log(self.table_data_month);
           })
           break;

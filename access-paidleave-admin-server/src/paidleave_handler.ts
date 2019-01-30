@@ -29,9 +29,8 @@ export default class PaidleaveHandler {
               return;
             }
             message.push({
-              'year': element[1],
-              'month': element[2],
-              'day': element[3],
+              'name': name,
+              'date': element[1] + '년 ' + element[2] + '월 ' + element[3] +'일',
               'type': element[4],
               'cummulate': element[5]
             });
