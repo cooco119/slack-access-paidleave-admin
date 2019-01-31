@@ -29,7 +29,9 @@ export default class AccessHandler {
       }
     });
     let resultListString = '';
-    let attendTime: Date = null, goHomeTime: Date = null;
+    let attendTime: Date = null, goHomeTime: Date = null, goOutTime: Date = null, getIn_returnTime: Date = null;
+    let outTime = 0;
+    let outTimeStr = '';
     try {resultData.forEach(element => {
       switch (element[7]){
         case '출근':
@@ -55,9 +57,21 @@ export default class AccessHandler {
           break;
         case '외출':
           goOut += 1;
+          goOutTime = new Date(parseInt(element[1]),
+                                parseInt(element[2]) - 1,
+                                parseInt(element[3]),
+                                parseInt(element[4]),
+                                parseInt(element[5]),
+                                parseInt(element[6]));
           break;
         case '복귀':
           getIn_return += 1;
+          getIn_returnTime = new Date(parseInt(element[1]),
+                                      parseInt(element[2]) - 1,
+                                      parseInt(element[3]),
+                                      parseInt(element[4]),
+                                      parseInt(element[5]),
+                                      parseInt(element[6]));
           break;
         default:
           console.log("No such type");
@@ -80,6 +94,11 @@ export default class AccessHandler {
           expectedGoHome = (new Date(attendTime.getTime() + 9*60000));
           remaining = '퇴근까지 얼마나?: ' + (new Date(expectedGoHome.getTime() - attendTime.getTime())).toLocaleTimeString();
         }
+      }
+      workDuration -= outTime + 3600;
+      if (outTime !== 0){
+        const underHourOut = (Math.floor((outTime % 3600) / 360) / 10);
+        outTimeStr = (Math.floor(outTime / 3600)).toString() + (underHourOut === 0 ? '' : '.' + underHourOut.toString().split('.')[1]) + '시간';
       }
       if (workDuration !== 0){
         const underHour = (Math.floor((workDuration % 3600) / 360) / 10);
@@ -133,8 +152,10 @@ export default class AccessHandler {
       }
     });
     let resultListString = '';
-    let attendTime: Date = null, goHomeTime: Date = null;
+    let attendTime: Date = null, goHomeTime: Date = null, goOutTime: Date = null, getIn_returnTime: Date = null;
     let workDuration: number = 0;
+    let outTime = 0;
+    let outTimeStr = '';
     try {
       resultData.forEach(element => {
         switch (element[7]){
@@ -161,9 +182,21 @@ export default class AccessHandler {
             break;
           case '외출':
             goOut += 1;
+            goOutTime = new Date(parseInt(element[1]),
+                                  parseInt(element[2]) - 1,
+                                  parseInt(element[3]),
+                                  parseInt(element[4]),
+                                  parseInt(element[5]),
+                                  parseInt(element[6]));
             break;
           case '복귀':
             getIn_return += 1;
+            getIn_returnTime = new Date(parseInt(element[1]),
+                                        parseInt(element[2]) - 1,
+                                        parseInt(element[3]),
+                                        parseInt(element[4]),
+                                        parseInt(element[5]),
+                                        parseInt(element[6]));
             break;
           default:
             console.log("No such type");
@@ -176,6 +209,11 @@ export default class AccessHandler {
         }
           resultListString += `${element[1]}년 ${element[2]}월 ${element[3]}일 ${element[4]}시 ${element[5]}분 ${element[6]}초 : ${element[7]}\n`;
       });
+      workDuration -= outTime + 3600;
+      if (outTime !== 0){
+        const underHourOut = (Math.floor((outTime % 3600) / 360) / 10);
+        outTimeStr = (Math.floor(outTime / 3600)).toString() + (underHourOut === 0 ? '' : '.' + underHourOut.toString().split('.')[1]) + '시간';
+      }
       let workDurationStr: string = '';
       if (workDuration !== 0){
         const underHour = (Math.floor((workDuration % 3600) / 360) / 10);
@@ -216,8 +254,10 @@ export default class AccessHandler {
       }
     });
     let resultListString = '';
-    let attendTime: Date = null, goHomeTime: Date = null;
+    let attendTime: Date = null, goHomeTime: Date = null, goOutTime: Date = null, getIn_returnTime: Date = null;
     let workDuration: number = 0;
+    let outTime = 0;
+    let outTimeStr = '';
     try {
       resultData.forEach(element => {
         switch (element[7]){
@@ -244,9 +284,21 @@ export default class AccessHandler {
             break;
           case '외출':
             goOut += 1;
+            goOutTime = new Date(parseInt(element[1]),
+                                  parseInt(element[2]) - 1,
+                                  parseInt(element[3]),
+                                  parseInt(element[4]),
+                                  parseInt(element[5]),
+                                  parseInt(element[6]));
             break;
           case '복귀':
             getIn_return += 1;
+            getIn_returnTime = new Date(parseInt(element[1]),
+                                        parseInt(element[2]) - 1,
+                                        parseInt(element[3]),
+                                        parseInt(element[4]),
+                                        parseInt(element[5]),
+                                        parseInt(element[6]));
             break;
           default:
             console.log("No such type");
@@ -259,6 +311,11 @@ export default class AccessHandler {
         }
         resultListString += `${element[1]}년 ${element[2]}월 ${element[3]}일 ${element[4]}시 ${element[5]}분 ${element[6]}초 : ${element[7]}\n`;
       });
+      workDuration -= outTime + 3600;
+      if (outTime !== 0){
+        const underHourOut = (Math.floor((outTime % 3600) / 360) / 10);
+        outTimeStr = (Math.floor(outTime / 3600)).toString() + (underHourOut === 0 ? '' : '.' + underHourOut.toString().split('.')[1]) + '시간';
+      }
       let workDurationStr: string = '';
       if (workDuration !== 0){
         const underHour = (Math.floor((workDuration % 3600) / 360) / 10);
