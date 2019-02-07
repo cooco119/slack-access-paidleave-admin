@@ -7,16 +7,53 @@ const proxy = require('express-http-proxy');
 const http = require('http');
 const https = require('https');
 const cors = require('cors');
+const history = require('connect-history-api-fallback');
+const mongoose = require('mongoose');
+const passport = require('passport');
+const session = require('express-session');
+
+mongoose.connect('mongodb://127.0.0.1:27017');
+mongoose.Promise = global.Promise;
+
+const db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'connection err.'));
+//@ts-ignore
+db.once('open', function(callback){
+  console.log("mongoDB connected");
+})
+require('./config/passport')(passport);
+
+const front_url = "192.168.101.198:8080/main";
+const front_url_entry = "192.168.101.198:8080/login";
+const api_url = "192.168.101.198:8000/api/v1";
 
 const app = express();
 const port = 8000;
 
-app.use(cors());
+app.use(cors({credentials: true, origin: 'http://192.168.101.198'}));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(history());
+
+//@ts-ignore
+function isLoggedIn(req, res, next){
+  console.log(req.session);
+  console.log(req.isAuthenticated());
+  if (req.isAuthenticated()){
+    console.log("Authed!");
+    return next();
+  }
+  console.log("Authed failed!");
+  setTimeout(() => {
+    //@ts-ignore
+    return res.json(404, {message: 'not found'});
+  }, 100);
+}
+
 
 // @ts-ignore
-app.get('/access?', cors(), (req, res) => {
+app.get('/access?', (req, res) => {
   (new AccessHandler()).handle(req.query)
   .then( response => {
     console.log(response);
@@ -24,7 +61,7 @@ app.get('/access?', cors(), (req, res) => {
   })
 })
 // @ts-ignore
-app.get('/paidleave?', cors(), (req, res) => {
+app.get('/paidleave?', (req, res) => {
   console.log(req.query);
   (new PaidleaveHandler()).handle(req.query)
   .then(response => {
@@ -35,4 +72,59 @@ app.get('/paidleave?', cors(), (req, res) => {
 
 http.createServer(app).listen(port, () => {
   console.log(`API server listening on port ${port}`);
+})
+
+const port_proxy = 80;
+const app_proxy = express();
+
+const flash = require('connect-flash');
+app_proxy.use(cors({credentials: true, origin: 'http://192.168.101.198'}));
+app_proxy.use(bodyParser.urlencoded({ extended: false }));
+app_proxy.use(bodyParser.json());
+app_proxy.use(history());
+app_proxy.use(flash());
+app_proxy.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true
+}));
+app_proxy.use(passport.initialize());
+app_proxy.use(passport.session());
+
+app_proxy.use('/api/v1', isLoggedIn, proxy(api_url));
+
+app_proxy.post('/login', passport.authenticate('login', {
+  // successRedirect: 'http://192.168.101.198/main',
+  faliureRedirect: 'http://192.168.101.1/login',
+  failureFlash: false
+  //@ts-ignore
+}), (req, res) => {
+  req.session.save(() => {
+    console.log(req.session);
+    console.log(req.isAuthenticated());
+    res.redirect('/');
+    res.status(200);
+  })
+});
+//@ts-ignore
+app_proxy.get('/logout', function(req, res) {
+  console.log("logout");
+  req.logout();
+  req.session.destory( () => {
+    console.log(req.session);
+  });
+  res.status(200);
+});
+app_proxy.post('/signup', passport.authenticate('signup', {
+  successRedirect: front_url + '/main',
+  faliureRedirect: front_url_entry,
+  failureFlash: false
+}));
+
+app_proxy.use('/main', proxy(front_url));
+app_proxy.use('/', proxy(front_url));
+
+
+http.createServer(app_proxy).listen(port_proxy, () => {
+  console.log(`Proxy server listening on port ${port_proxy}`);
 })
