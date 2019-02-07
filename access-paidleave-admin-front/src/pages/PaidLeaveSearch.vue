@@ -5,7 +5,7 @@
         <h5 class="title">조회할 이름 입력</h5>
         <md-field>
           <label>이름</label>
-          <md-input v-model="name"></md-input>
+          <md-input v-model="name" v-on:keydown.enter="submit" ></md-input>
         </md-field>
         </md-card-content>
         <md-card-content>
@@ -49,7 +49,7 @@ export default {
   },
   methods: {
     submit: function() {
-      const url_prefix = "http://c063c4f4.ngrok.io/api/v1";
+      const url_prefix = "http://192.168.101.198/api/v1";
       let url;
       let self = this;
       this.table_data = [];
@@ -62,20 +62,27 @@ export default {
       console.log(url);
       fetch(url, {
         method: 'GET',
+        credentials: "include",
         headers: {
           "content-type": "application/x-www-form-urlencoded; charset=utf-8",
           "Accept": "application/json"
         }
       }).then( async res => {
-        let tmp = await res.json();
-        const tmp2 = { ...tmp};
-        console.log(tmp2);
-        if (tmp2.exists){
-          for (let i = 0; i < tmp2.message.length; i++){
-            self.table_data.push(tmp2.message[i]);
+        if (res.status === 200){
+          let tmp = await res.json();
+          const tmp2 = { ...tmp};
+          console.log(tmp2);
+          if (tmp2.exists){
+            for (let i = 0; i < tmp2.message.length; i++){
+              self.table_data.push(tmp2.message[i]);
+            }
           }
+          console.log(self.table_data);
         }
-        console.log(self.table_data);
+        else{
+          alert("조회하려면 로그인이 필요합니다");
+          this.$router.push({name: '로그인'});
+        }
       })
     }
   },

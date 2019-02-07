@@ -135,7 +135,7 @@ export default {
   }),
   methods: {
     submit: function (event){
-      const url_prefix = "http://c063c4f4.ngrok.io/api/v1";
+      const url_prefix = "http://192.168.101.198/api/v1";
       let url, date, scope = this.radio, result, response;
       let self = this;
       switch(this.radio){
@@ -151,19 +151,27 @@ export default {
           console.log(url);
           fetch(url, {
             method: 'GET',
+            // mode: 'cors',
             headers: {
               "content-type": "application/x-www-form-urlencoded; charset=utf-8",
               "Accept": "application/json"
-            }
+            },
+            credentials: "include"
           }).then( async res => {
-            let tmp = await res.json();
-            tmp = JSON.parse(JSON.stringify(tmp));
-            console.log(tmp.result[0]);
-            for (let i = 0; i < tmp.result.length; i++){
-              self.table_data_day.push(tmp.result[i]);
+            if (res.status === 200){
+              let tmp = await res.json();
+              tmp = JSON.parse(JSON.stringify(tmp));
+              console.log(tmp.result[0]);
+              for (let i = 0; i < tmp.result.length; i++){
+                self.table_data_day.push(tmp.result[i]);
+              }
+              console.log(self.table_data_day);
             }
-            console.log(self.table_data_day);
-          })
+            else {
+              alert("조회하려면 로그인이 필요합니다.");
+              this.$router.push({name: '로그인'});
+            }
+          }).catch(e => console.log(e));
           break;
         case "weekly":
           this.table_data_week = [];
@@ -177,19 +185,26 @@ export default {
           console.log(url);
           fetch(url, {
             method: 'GET',
+            credentials: "include",
             headers: {
               "content-type": "application/x-www-form-urlencoded; charset=utf-8",
               "Accept": "application/json"
             }
           }).then( async res => {
-            let tmp = await res.json();
-            tmp = JSON.parse(JSON.stringify(tmp));
-            console.log(tmp.result);
-            for (let i = 0; i < tmp.result.length; i++){
-              self.table_data_week.push(tmp.result[i]);
+              if (res.status === 200){
+              let tmp = await res.json();
+              tmp = JSON.parse(JSON.stringify(tmp));
+              console.log(tmp.result);
+              for (let i = 0; i < tmp.result.length; i++){
+                self.table_data_week.push(tmp.result[i]);
+              }
+              console.log(self.table_data_week);
             }
-            console.log(self.table_data_week);
-          })
+            else {
+              alert("조회하려면 로그인이 필요합니다.");
+              this.$router.push('login');
+            }
+          }).catch(e => console.log(e));
           break;
         case "monthly":
           this.table_data_month = [];
@@ -203,19 +218,26 @@ export default {
           console.log(url);
           fetch(url, {
             method: 'GET',
+            credentials: "include",
             headers: {
               "content-type": "application/x-www-form-urlencoded; charset=utf-8",
               "Accept": "application/json"
             }
           }).then( async res => {
-            let tmp = await res.json();
-            tmp = JSON.parse(JSON.stringify(tmp));
-            console.log(tmp.result[0]);
-            for (let i = 0; i < tmp.result.length; i++){
-              self.table_data_month.push(tmp.result[i]);
+            if (res.status === 200){
+              let tmp = await res.json();
+              tmp = JSON.parse(JSON.stringify(tmp));
+              console.log(tmp.result[0]);
+              for (let i = 0; i < tmp.result.length; i++){
+                self.table_data_month.push(tmp.result[i]);
+              }
+              console.log(self.table_data_month);
             }
-            console.log(self.table_data_month);
-          })
+            else {
+              alert("조회하려면 로그인이 필요합니다.");
+              this.$router.push("로그인");
+            }
+          }).catch(e => console.log(e));
           break;
         default: 
           alert("에러, 정확한 입력 필요.");

@@ -3,12 +3,19 @@ import DashboardLayout from "@/pages/Layout/DashboardLayout.vue";
 import Dashboard from "@/pages/Dashboard.vue";
 import AccessTable from "@/pages/AccessSearch.vue";
 import PaidLeaveTable from "@/pages/PaidLeaveSearch.vue";
+import LoginPage from "@/pages/LoginPage.vue";
 
 const routes = [
   {
-    path: "/",
+    path: "/login",
+    name: "로그인",
+    component: LoginPage
+  },
+  {
+    path: "/main",
     component: DashboardLayout,
-    redirect: "/dashboard",
+    name: "main",
+    redirect: "/main/dashboard",
     children: [
       {
         path: "dashboard",
@@ -24,8 +31,18 @@ const routes = [
         path: "paidleave",
         name: "연차 조회 관리",
         component: PaidLeaveTable
+      },
+      {
+        path: "login",
+        name: "로그인",
+        component: LoginPage
       }
     ]
+  },
+  {
+    path: "/",
+    name: "root",
+    redirect: "/main"
   }
 ];
 

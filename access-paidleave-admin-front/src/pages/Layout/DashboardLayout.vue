@@ -4,7 +4,7 @@
 
     <side-bar>
       <mobile-menu slot="content"></mobile-menu>
-      <sidebar-link to="/dashboard">
+      <sidebar-link to="/main/dashboard">
         <md-icon>dashboard</md-icon>
         <p>대쉬보드</p>
       </sidebar-link>
@@ -12,11 +12,11 @@
         <md-icon>person</md-icon>
         <p>User Profile</p>
       </sidebar-link> -->
-      <sidebar-link to="/access">
+      <sidebar-link to="/main/access">
         <md-icon>list</md-icon>
         <p>출퇴근 조회</p>
       </sidebar-link>
-      <sidebar-link to="/paidleave">
+      <sidebar-link to="/main/paidleave">
         <md-icon>list</md-icon>
         <p>연차 조회</p>
       </sidebar-link>

@@ -13,9 +13,13 @@
 
         <div class="md-collapse">
           <md-list>
-            <md-list-item to="/login">
+            <md-list-item to='/login'>
               <i class="material-icons">person</i>
               <p class="hidden-lg hidden-md">Login</p>
+            </md-list-item>
+            <md-list-item @click="logout">
+              <i class="material-icons">exit_to_app</i>
+              <p class="hidden-lg hidden-md">Logout</p>
             </md-list-item>
           </md-list>
         </div>
@@ -30,6 +34,23 @@ export default {
   methods: {
     toggleSidebar() {
       this.$sidebar.displaySidebar(!this.$sidebar.showSidebar);
+    },
+    logout() {
+      const url_logout = "http://192.168.101.198/logout";
+      fetch(url_logout, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        }
+      }).then( res => {
+        if (res.status === 200){
+          alert("로그아웃 성공");
+        }
+        else {
+          console.log("로그아웃 실패", res);
+        }
+      })
     }
   }
 };
