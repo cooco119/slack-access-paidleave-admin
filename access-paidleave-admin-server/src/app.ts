@@ -94,8 +94,8 @@ app_proxy.use(passport.session());
 app_proxy.use('/api/v1', isLoggedIn, proxy(api_url));
 
 app_proxy.post('/login', passport.authenticate('login', {
-  // successRedirect: 'http://192.168.101.198/main',
-  faliureRedirect: 'http://192.168.101.1/login',
+  successRedirect: 'http://192.168.101.198/main',
+  faliureRedirect: 'http://192.168.101.198/login',
   failureFlash: false
   //@ts-ignore
 }), (req, res) => {
@@ -103,17 +103,15 @@ app_proxy.post('/login', passport.authenticate('login', {
     console.log(req.session);
     console.log(req.isAuthenticated());
     res.redirect('/');
-    res.status(200);
+    res.json(200, "Login successful");
   })
 });
 //@ts-ignore
-app_proxy.get('/logout', function(req, res) {
+app_proxy.post('/logout', (req, res) => {
   console.log("logout");
+  console.log(req.session);
   req.logout();
-  req.session.destory( () => {
-    console.log(req.session);
-  });
-  res.status(200);
+  res.json(200, "Successful");
 });
 app_proxy.post('/signup', passport.authenticate('signup', {
   successRedirect: front_url + '/main',
