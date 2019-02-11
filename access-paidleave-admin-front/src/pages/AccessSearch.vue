@@ -175,6 +175,7 @@ export default {
               for (let i = 0; i < tmp.result.length; i++){
                 self.table_data_day.push(tmp.result[i]);
               }
+              self.table_data.sort(self.compare);
               this.submitted_daily = true;
               console.log(self.table_data_day);
             }
@@ -210,6 +211,7 @@ export default {
               for (let i = 0; i < tmp.result.length; i++){
                 self.table_data_week.push(tmp.result[i]);
               }
+              self.table_data.sort(self.compare);
               console.log(self.table_data_week);
               this.submitted_weekly = true;
             }
@@ -246,6 +248,7 @@ export default {
               for (let i = 0; i < tmp.result.length; i++){
                 self.table_data_month.push(tmp.result[i]);
               }
+              self.table_data.sort(self.compare);
               this.submitted_monthly = true;
               console.log(self.table_data_month);
             }
@@ -305,6 +308,28 @@ export default {
       hiddenElement.target = '_blank';
       hiddenElement.download = title;
       hiddenElement.click();
+    },
+    compare: function(a, b){
+      const nameA = a.name.toUpperCase();
+      const nameB = b.name.toUpperCase();
+      const dateA = a.date.toUpperCase();
+      const dateB = b.date.toUpperCase();
+
+      if (nameA > nameB) {
+        return 1;
+      }
+      else if (nameA < nameB) {
+        return -1;
+      }
+      else {
+        if (dateA > dateB){
+          return 1;
+        }
+        else if (dateA < dateB){
+          return -1;
+        }
+        return 0;
+      }
     }
   },
   components: {
