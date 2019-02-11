@@ -105,26 +105,37 @@ export default {
       this.name = null;
     },
     submit: function (event){
-      const url = "http://192.168.101.198/api/v1/insert";
+      const url_prefix = "http://192.168.101.198/api/v1";
       let result, response;
       let self = this;
+      let url, content;
+      if (this.type === "access"){
+        url = url_prefix + "/access/insert";
+        content = {
+          "type": this.type_access,
+          "date": this.date,
+          "name": this.name
+        };
+      }
+      else if (this.type === "paidleave"){
+        url = url_prefix + "/paidleave/insert";
+        content = {
+          "type": this.type_paidleave,
+          "date": this.date,
+          "name": this.name
+        }
+      }
       fetch(url, {
         method: "POST",
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
+          "Content-Type": "application/json"
         },
-        body: {
-          scope: this.type,
-          type_access: this.type_access,
-          type_paidleave: this.type_paidleave,
-          date: this.date,
-          name: this.name
-        }
+        body: JSON.stringify(content)
       }).then( res => {
         if (res.status === 200){
           console.log(res.json());
           alert("다음 내용이 성공적으로 등록되었습니다.\n" + 
-                `- 종류: ${this.type === 'access' ? 출퇴근 : 휴가} - ${this.type_access !== null ? this.access_enum[this.type_access] : this.paidleave_enum[this.type_paidleave]}\n` + 
+                `- 분류: ${this.type === 'access' ? 출퇴근 : 휴가} - ${this.type_access !== null ? this.access_enum[this.type_access] : this.paidleave_enum[this.type_paidleave]}\n` + 
                 `- 날짜: ${this.date.getLocaleDateString()}\n` + 
                 `- 이름: ${this.name}`);
         }
