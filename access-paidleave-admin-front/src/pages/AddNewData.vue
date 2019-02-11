@@ -55,7 +55,7 @@
               <md-field>
                 <label>시간</label>
                 <md-select v-model="hour" name="시간" id="hour">
-                  <md-option style="vertical-align: middle; line-height: 50px; padding-left: 10px" v-for="hour in 23" v-bind:value="hour" v-bind:key="hour">
+                  <md-option style="vertical-align: middle; line-height: 50px; padding-left: 10px" v-for="hour in hourRange" v-bind:value="hour" v-bind:key="hour">
                     {{hour}}시
                   </md-option>
                 </md-select>
@@ -65,7 +65,7 @@
               <md-field>
                 <label>분</label>
                 <md-select v-model="minute" name="분" id="minute">
-                  <md-option style="line-height: 50px; padding-left: 10px" v-for="minute in 59" v-bind:value="minute" v-bind:key="minute">
+                  <md-option style="line-height: 50px; padding-left: 10px" v-for="minute in minRange" v-bind:value="minute" v-bind:key="minute">
                     {{minute}}분
                   </md-option>
                 </md-select>
@@ -135,12 +135,11 @@ export default {
       this.hour = 0;
     },
     submit: function (event){
-      const url_prefix = "http://192.168.101.198/api/v1";
+      const url = "http://192.168.101.198/api/v1/insert";
       let result, response;
       let self = this;
-      let url, content;
+      let content;
       if (this.type === "access"){
-        url = url_prefix + "/access/insert";
         content = {
           "type": this.type_access,
           "date": this.date,
@@ -148,7 +147,6 @@ export default {
         };
       }
       else if (this.type === "paidleave"){
-        url = url_prefix + "/paidleave/insert";
         content = {
           "type": this.type_paidleave,
           "date": this.date,
@@ -165,13 +163,14 @@ export default {
         if (res.status === 200){
           console.log(res.json());
           alert("다음 내용이 성공적으로 등록되었습니다.\n" + 
-                `- 분류: ${this.type === 'access' ? 출퇴근 : 휴가} - ${this.type_access !== null ? this.access_enum[this.type_access] : this.paidleave_enum[this.type_paidleave]}\n` + 
-                `- 날짜: ${this.date.getLocaleDateString()}\n` + 
+                `- 분류: ${this.type === 'access' ? "출퇴근" : "휴가"} - ${this.type_access !== null ? this.access_enum[this.type_access] : this.paidleave_enum[this.type_paidleave]}\n` + 
+                `- 날짜: ${this.date.toLocaleDateString()}\n` + 
+                `${this.type === 'access' ? '- 시간: ' + this.hour.toString() + '시 ' + this.minute.toString() + '분\n' : ''}` +
                 `- 이름: ${this.name}`);
         }
         else{
-          // alert("데이터를 입력하려면 로그인이 필요합니다");
-          // this.$router.push({name: '로그인'});
+          alert("데이터를 입력하려면 로그인이 필요합니다");
+          this.$router.push({name: '로그인'});
           console.log(res);
         }
       }).catch(err => {
@@ -205,6 +204,12 @@ export default {
     },
     lastDay: function (event){
       return (new Date(this.select_year, this.select_month, 0)).getDate();
+    },
+    minRange: function () {
+      return [...Array(60).keys()];
+    },
+    hourRange: function () {
+      return [...Array(24).keys()];
     }
   }
 };
