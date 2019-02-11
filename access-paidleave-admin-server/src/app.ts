@@ -45,7 +45,7 @@ function isLoggedIn(req, res, next){
   console.log("Authed failed!");
   setTimeout(() => {
     //@ts-ignore
-    return res.json(404, {message: 'not found'});
+    return res.json(401, {message: 'not found'});
   }, 100);
 }
 

@@ -179,10 +179,13 @@ export default {
                 `${this.type === 'access' ? '- 시간: ' + this.hour.toString() + '시 ' + this.minute.toString() + '분\n' : ''}` +
                 `- 이름: ${this.name}`);
         }
-        else{
+        else if (res.status === 401){
           alert("데이터를 입력하려면 로그인이 필요합니다");
           this.$router.push({name: '로그인'});
           console.log(res);
+        }
+        else {
+          alert("에러 발생\n" + `에러 내용: ${res.json().error}`);
         }
       }).catch(err => {
         console.error(err);

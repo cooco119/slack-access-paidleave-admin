@@ -82,9 +82,12 @@ export default {
           console.log(self.table_data);
           this.show_download = true;
         }
-        else{
-          alert("조회하려면 로그인이 필요합니다");
+        else if (res.status === 401) {
+          alert("조회하려면 로그인이 필요합니다.");
           this.$router.push({name: '로그인'});
+        }
+        else {
+          alert("에러 발생\n" + `내용: ${res.json()}`);
         }
       })
     },

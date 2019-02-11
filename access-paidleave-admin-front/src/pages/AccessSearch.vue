@@ -178,9 +178,12 @@ export default {
               this.submitted_daily = true;
               console.log(self.table_data_day);
             }
-            else {
+            else if (res.status === 401) {
               alert("조회하려면 로그인이 필요합니다.");
               this.$router.push({name: '로그인'});
+            }
+            else {
+              alert("에러 발생\n" + `내용: ${res.json()}`);
             }
             this.select();
           }).catch(e => console.log(e));
@@ -214,9 +217,12 @@ export default {
               console.log(self.table_data_week);
               this.submitted_weekly = true;
             }
-            else {
+            else if (res.status === 401) {
               alert("조회하려면 로그인이 필요합니다.");
-              this.$router.push('login');
+              this.$router.push({name: '로그인'});
+            }
+            else {
+              alert("에러 발생\n" + `내용: ${res.json()}`);
             }
             this.select();
           }).catch(e => console.log(e));
@@ -251,9 +257,12 @@ export default {
               this.submitted_monthly = true;
               console.log(self.table_data_month);
             }
-            else {
+            else if (res.status === 401) {
               alert("조회하려면 로그인이 필요합니다.");
-              this.$router.push("로그인");
+              this.$router.push({name: '로그인'});
+            }
+            else {
+              alert("에러 발생\n" + `내용: ${res.json()}`);
             }
             this.select();
           }).catch(e => console.log(e));
