@@ -81,7 +81,7 @@
           <md-card-content>
             <div v-show="radio === 'daily'">
               <md-table v-model="table_data_day">
-                <md-table-row slot="md-table-row" slot-scope="{ item }">
+                <md-table-row slot="md-table-row" slot-scope="{ item }" v-show="parseInt(item.duration) > 0">
                   <md-table-cell md-label="이름">{{ item.name }}</md-table-cell>
                   <md-table-cell md-label="일시">{{ item.date }}</md-table-cell>
                   <md-table-cell md-label="총 근무 시간">{{ item.duration }}</md-table-cell>
@@ -92,7 +92,7 @@
             </div>
             <div v-show="radio === 'weekly'">
               <md-table v-model="table_data_week">
-                <md-table-row slot="md-table-row" slot-scope="{ item }">
+                <md-table-row slot="md-table-row" slot-scope="{ item }" v-show="parseInt(item.duration) > 0">
                   <md-table-cell md-label="이름">{{ item.name }}</md-table-cell>
                   <md-table-cell md-label="해당연월">{{ item.date }}</md-table-cell>
                   <md-table-cell md-label="해당 주">{{ item.week }}</md-table-cell>
@@ -102,7 +102,7 @@
             </div>
             <div v-show="radio === 'monthly'">
               <md-table v-model="table_data_month" >
-                <md-table-row slot="md-table-row" slot-scope="{ item }">
+                <md-table-row slot="md-table-row" slot-scope="{ item }" v-show="parseInt(item.duration) > 0">
                   <md-table-cell md-label="이름">{{ item.name }}</md-table-cell>
                   <md-table-cell md-label="해당 연월">{{ item.date }}</md-table-cell>
                   <md-table-cell md-label="총 근무 시간">{{ item.duration }}</md-table-cell>
@@ -175,7 +175,7 @@ export default {
               for (let i = 0; i < tmp.result.length; i++){
                 self.table_data_day.push(tmp.result[i]);
               }
-              self.table_data.sort(self.compare);
+              self.table_data_day.sort(self.compare);
               this.submitted_daily = true;
               console.log(self.table_data_day);
             }
@@ -211,7 +211,7 @@ export default {
               for (let i = 0; i < tmp.result.length; i++){
                 self.table_data_week.push(tmp.result[i]);
               }
-              self.table_data.sort(self.compare);
+              self.table_data_week.sort(self.compare);
               console.log(self.table_data_week);
               this.submitted_weekly = true;
             }
@@ -248,7 +248,7 @@ export default {
               for (let i = 0; i < tmp.result.length; i++){
                 self.table_data_month.push(tmp.result[i]);
               }
-              self.table_data.sort(self.compare);
+              self.table_data_month.sort(self.compare);
               this.submitted_monthly = true;
               console.log(self.table_data_month);
             }
@@ -273,11 +273,13 @@ export default {
         data = this.table_data_day;
         csv = '"이름","일시","총 근무 시간","출근 시간","퇴근 시간"\n';
         for (let i = 0; i < data.length; i++ ){
-          csv += `"${data[i].name}",`;
-          csv += `"${data[i].date}",`;
-          csv += `"${data[i].duration}",`;
-          csv += `"${data[i].attend}",`;
-          csv += `"${data[i].goHome}"\n`;
+          if (parseInt(data[i].duration) > 0){
+            csv += `"${data[i].name}",`;
+            csv += `"${data[i].date}",`;
+            csv += `"${data[i].duration}",`;
+            csv += `"${data[i].attend}",`;
+            csv += `"${data[i].goHome}"\n`;
+          }
         }
         title = `일별조회_${data[0].date}.csv`;
       }
@@ -285,10 +287,12 @@ export default {
         data = this.table_data_week;
         csv = '"이름","해당연월","해당 주","총 근무 시간"\n';
         for (let i = 0; i < data.length; i++ ){
-          csv += `"${data[i].name}",`;
-          csv += `"${data[i].date}",`;
-          csv += `"${data[i].week}",`;
-          csv += `"${data[i].duration}"\n`;
+          if (parseInt(data[i].duration) > 0){
+            csv += `"${data[i].name}",`;
+            csv += `"${data[i].date}",`;
+            csv += `"${data[i].week}",`;
+            csv += `"${data[i].duration}"\n`;
+          }
         }
         title = `주별조회_${data[0].date}.csv`;
       }
@@ -296,9 +300,11 @@ export default {
         data = this.table_data_month;
         csv = '"이름","해당 연월","총 근무 시간"\n';
         for (let i = 0; i < data.length; i++ ){
-          csv += `"${data[i].name}",`;
-          csv += `"${data[i].date}",`;
-          csv += `"${data[i].duration}"\n`;
+          if (parseInt(data[i].duration) > 0){
+            csv += `"${data[i].name}",`;
+            csv += `"${data[i].date}",`;
+            csv += `"${data[i].duration}"\n`;
+          }
         }
         title = `월별조회_${data[0].date}.csv`;
       }
