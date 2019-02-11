@@ -1,10 +1,11 @@
 import DashboardLayout from "@/pages/Layout/DashboardLayout.vue";
 
 import Dashboard from "@/pages/Dashboard.vue";
-import AccessTable from "@/pages/AccessSearch.vue";
-import PaidLeaveTable from "@/pages/PaidLeaveSearch.vue";
+import WorkTimePage from "@/pages/WorkTimeSearch.vue";
+import PaidLeavePage from "@/pages/PaidLeaveSearch.vue";
 import LoginPage from "@/pages/LoginPage.vue";
 import AddNewData from "@/pages/AddNewData.vue";
+import AccessPage from "@/pages/AccessSearch.vue";
 
 const routes = [
   {
@@ -16,22 +17,17 @@ const routes = [
     path: "/main",
     component: DashboardLayout,
     name: "main",
-    redirect: "/main/dashboard",
+    redirect: "/main/add",
     children: [
       {
-        path: "dashboard",
-        name: "대쉬보드",
-        component: Dashboard
-      },
-      {
-        path: "access",
-        name: "출퇴근 조회 관리",
-        component: AccessTable
+        path: "worktime",
+        name: "근무시간 조회",
+        component: WorkTimePage
       },
       {
         path: "paidleave",
-        name: "연차 조회 관리",
-        component: PaidLeaveTable
+        name: "휴가 내역 조회",
+        component: PaidLeavePage
       },
       {
         path: "add",
@@ -39,9 +35,14 @@ const routes = [
         component: AddNewData
       },
       {
-        path: "login",
-        name: "로그인",
-        component: LoginPage
+        path: "dashboard",
+        name: "대시보드",
+        component: Dashboard
+      },
+      {
+        path: "access",
+        name: "출입 기록 조회",
+        component: AccessPage
       }
     ]
   },

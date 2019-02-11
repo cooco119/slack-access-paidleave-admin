@@ -4,25 +4,29 @@
 
     <side-bar>
       <mobile-menu slot="content"></mobile-menu>
-      <sidebar-link to="/main/dashboard">
+      <!-- <sidebar-link to="/main/dashboard">
         <md-icon>dashboard</md-icon>
-        <p>대쉬보드</p>
-      </sidebar-link>
+        <p>대시보드</p>
+      </sidebar-link> -->
       <!-- <sidebar-link to="/user">
         <md-icon>person</md-icon>
         <p>User Profile</p>
       </sidebar-link> -->
-      <sidebar-link to="/main/access">
-        <md-icon>list</md-icon>
-        <p>출퇴근 조회</p>
-      </sidebar-link>
-      <sidebar-link to="/main/paidleave">
-        <md-icon>list</md-icon>
-        <p>연차 조회</p>
-      </sidebar-link>
       <sidebar-link to="/main/add">
         <md-icon>event</md-icon>
         <p>출퇴근/휴가 신규 등록</p>
+      </sidebar-link>
+      <sidebar-link to="/main/worktime">
+        <md-icon>list</md-icon>
+        <p>근무시간 조회</p>
+      </sidebar-link>
+      <sidebar-link to="/main/paidleave">
+        <md-icon>list</md-icon>
+        <p>휴가 내역 조회</p>
+      </sidebar-link>
+      <sidebar-link to="/main/access">
+        <md-icon>list</md-icon>
+        <p>출입 기록 조회</p>
       </sidebar-link>
       <!-- <sidebar-link to="/icons">
         <md-icon>bubble_chart</md-icon>

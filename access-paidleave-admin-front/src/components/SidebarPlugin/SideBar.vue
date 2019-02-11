@@ -36,7 +36,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: "출퇴근 연차 조회 관리"
+      default: "근무/휴가 조회 관리"
     },
     backgroundImage: {
       type: String,

@@ -15,7 +15,7 @@
       <div class="md-layout-item md-medium-size-100 md-xsmall-size-100 md-size-100">
         <md-card class="md-card-plain">
           <md-card-header data-background-color="green">
-            <h4 class="title">연차 조회 결과</h4>
+            <h4 class="title">휴가 내역 조회 결과</h4>
           </md-card-header>
           <md-card-content>
             <div>
