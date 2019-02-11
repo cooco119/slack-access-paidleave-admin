@@ -1,11 +1,48 @@
 import * as fs from 'fs';
 const Papa = require('papaparse');
+const csvWriter = require('csv-write-stream');
 
 export default class AccessHandler {
   csvfilePrefix: string = process.cwd().toString() + '/../../data/access/';
 
   private getNameList(){
     return fs.readdirSync(this.csvfilePrefix);
+  }
+
+  // @ts-ignore
+  private async sortAndRewrite(csv){
+    console.log("csv: ", csv);
+
+    let csvdata: Array<Array<string>> = [];
+    await Papa.parse(fs.readFileSync(csv).toString(), {
+      worker: true,
+      // @ts-ignore
+      step: (results) => {
+        csvdata.push(results.data[0]);
+      }
+    })
+    let dataNoHeader = csvdata.slice(1, csvdata.length-1);
+    dataNoHeader.sort((a: Array<string>, b: Array<string>): number => {
+      const dateA = new Date(parseInt(a[1]), parseInt(a[2])-1, parseInt(a[3]), parseInt(a[4]), parseInt(a[5]), parseInt(a[6]));
+      const dateB = new Date(parseInt(b[1]), parseInt(b[2])-1, parseInt(b[3]), parseInt(b[4]), parseInt(b[5]), parseInt(b[6]));
+
+      if (dateA > dateB) return 1;
+      if (dateA < dateB) return -1;
+
+      return 0;
+    });
+    console.log(dataNoHeader);
+
+    const writer = csvWriter({headers: ['name', 'year', 'month', 'day', 'hour', 'minute', 'second', 'type'], sendHeaders: true});
+    writer.pipe(fs.createWriteStream(csv, { flags: 'w' }));
+    for (let i = 0; i < dataNoHeader.length; i++){
+      if (dataNoHeader[i][0] === ''){
+        continue;
+      }
+      writer.write(dataNoHeader[i]);
+    }
+    writer.end();
+
   }
 
   // @ts-ignore
@@ -406,5 +443,51 @@ export default class AccessHandler {
       "result": resultList
     }
     return result;
+  }
+
+  //@ts-ignore
+  public insert(data){
+    let response;
+    console.log("hello access-handler insert");
+    try{
+      const typeEnum: Object = Object.freeze({"attend": "출근", "goHome": "퇴근", "goOut": "외출", "getIn": "복귀"});
+      // @ts-ignore
+      const type: string = typeEnum[data.type];
+      let date: Date = new Date(data.date);
+      console.log(date.toLocaleDateString());
+      const name: string = data.name;
+
+      let year: string, month: string, day: string, hour: string, minute: string, second: string;
+      year = date.getFullYear().toString();
+      month = (date.getMonth() + 1).toString();
+      day = date.getDate().toString();
+      hour = date.getHours().toString();
+      minute = date.getSeconds().toString();
+      second = '0';
+      console.log([name, year, month, day, hour, minute, second, type]);
+
+      const csvfile = this.csvfilePrefix + name + '.csv';
+      console.log(csvfile);
+      // let sendHeaderOrNot: boolean = false;
+      // if (!fs.existsSync(csvfile)) sendHeaderOrNot = true;
+      // const writer = csvWriter({headers: ['name', 'year', 'month', 'day', 'hour', 'minute', 'second', 'type'], sendHeaders: sendHeaderOrNot});
+      // writer.pipe(fs.createWriteStream(csvfile, { flags: 'a' }));
+      // writer.write([name, year, month, day, hour, minute, second, type]);
+      // writer.end();
+      fs.writeFileSync(csvfile, `${name},${year},${month},${day},${hour},${minute},${second},${type}\n`, {flag: 'a'});
+
+      this.sortAndRewrite(csvfile);
+      response = {
+        "msg": "Insert success"
+      };
+      return response;
+    }
+    catch(e) {
+      response = {
+        "msg": "Error occured",
+        "error": e
+      }
+      throw response;
+    }
   }
 }

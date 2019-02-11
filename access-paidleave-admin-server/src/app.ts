@@ -26,7 +26,7 @@ require('./config/passport')(passport);
 
 const front_url = "192.168.101.198:8080/main";
 const front_url_entry = "192.168.101.198:8080/login";
-const api_url = "192.168.101.198:8000/api/v1";
+const api_url = "192.168.101.198:8000";
 
 const app = express();
 const port = 8000;
@@ -38,8 +38,6 @@ app.use(history());
 
 //@ts-ignore
 function isLoggedIn(req, res, next){
-  console.log(req.session);
-  console.log(req.isAuthenticated());
   if (req.isAuthenticated()){
     console.log("Authed!");
     return next();
@@ -51,9 +49,33 @@ function isLoggedIn(req, res, next){
   }, 100);
 }
 
+// @ts-ignore
+app.post('/insert', (req, res) => {
+  const data = req.body;
+  if (data.scope === 'access'){
+    try{
+    let response = (new AccessHandler()).insert(data);
+// @ts-ignore
+      console.log(response);
+      res.status(200).json(response);
+    }
+// @ts-ignore
+    catch(e) {
+      console.error(e);
+      res.status(404).json(e);
+    };
+  }
+  else if (data.scope === 'paidleave'){
+
+  }
+  else {
+    console.log("Unknown scope");
+    res.status(404).json({"msg": "Unknown scope"});
+  }
+});
 
 // @ts-ignore
-app.get('/access?', (req, res) => {
+app.get('/access', (req, res) => {
   (new AccessHandler()).handle(req.query)
   .then( response => {
     console.log(response);
@@ -61,7 +83,7 @@ app.get('/access?', (req, res) => {
   })
 })
 // @ts-ignore
-app.get('/paidleave?', (req, res) => {
+app.get('/paidleave', (req, res) => {
   console.log(req.query);
   (new PaidleaveHandler()).handle(req.query)
   .then(response => {

@@ -141,6 +141,7 @@ export default {
       let content;
       if (this.type === "access"){
         content = {
+          "scope": this.type,
           "type": this.type_access,
           "date": this.date,
           "name": this.name
@@ -148,6 +149,7 @@ export default {
       }
       else if (this.type === "paidleave"){
         content = {
+          "scope": this.type,
           "type": this.type_paidleave,
           "date": this.date,
           "name": this.name
