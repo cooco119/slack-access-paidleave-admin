@@ -119,7 +119,6 @@
 
 <script>
 import { AccessTableDaily, AccessTableWeekly, AccessTableMonthly } from "@/components";
-import { encode } from 'punycode';
 const queryString = require('query-string');
 
 export default {

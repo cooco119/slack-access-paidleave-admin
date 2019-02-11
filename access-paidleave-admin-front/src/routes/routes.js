@@ -4,6 +4,7 @@ import Dashboard from "@/pages/Dashboard.vue";
 import AccessTable from "@/pages/AccessSearch.vue";
 import PaidLeaveTable from "@/pages/PaidLeaveSearch.vue";
 import LoginPage from "@/pages/LoginPage.vue";
+import AddNewData from "@/pages/AddNewData.vue";
 
 const routes = [
   {
@@ -31,6 +32,11 @@ const routes = [
         path: "paidleave",
         name: "연차 조회 관리",
         component: PaidLeaveTable
+      },
+      {
+        path: "add",
+        name: "출퇴근/휴가 신규 등록",
+        component: AddNewData
       },
       {
         path: "login",

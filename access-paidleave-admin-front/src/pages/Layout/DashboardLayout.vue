@@ -20,6 +20,10 @@
         <md-icon>list</md-icon>
         <p>연차 조회</p>
       </sidebar-link>
+      <sidebar-link to="/main/add">
+        <md-icon>event</md-icon>
+        <p>출퇴근/휴가 신규 등록</p>
+      </sidebar-link>
       <!-- <sidebar-link to="/icons">
         <md-icon>bubble_chart</md-icon>
         <p>Icons</p>
