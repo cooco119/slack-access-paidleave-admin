@@ -5,9 +5,9 @@
         <md-card-content>
         <h5 class="title">조회 범위 설정하기</h5>
         <div class="md-layout-item md-medium-size-100 md-xsmall-size-100 md-size-100">
-          <md-radio v-model="radio" value="daily">일별 조회</md-radio>
-          <md-radio v-model="radio" value="weekly">주별 조회</md-radio>
-          <md-radio v-model="radio" value="monthly">월별 조회</md-radio>
+          <md-radio v-on:change="select" v-model="radio" value="daily">일별 조회</md-radio>
+          <md-radio v-on:change="select" v-model="radio" value="weekly">주별 조회</md-radio>
+          <md-radio v-on:change="select" v-model="radio" value="monthly">월별 조회</md-radio>
         </div>
         <div class="md-layout-item md-medium-size-100 md-xsmall-size-100 md-size-100">
           <md-datepicker v-if="radio === 'daily'" v-model="select_daily">
@@ -18,8 +18,8 @@
               <md-field>
                 <label for="year">연도</label>
                 <md-select v-model="select_weekly_year" name="연도" id="year">
-                  <md-option v-for="curYear in years" :value="curYear" :key="curYear">
-                    <label style="line-height: 50px; padding-left: 10px">{{curYear}}년</label>
+                  <md-option style="vertical-align: middle; line-height: 50px; padding-left: 10px" v-for="curYear in years" v-bind:value="curYear" v-bind:key="curYear">
+                    {{curYear}}년
                   </md-option>
                 </md-select>
               </md-field>
@@ -28,8 +28,8 @@
               <md-field>
                 <label for="year">월</label>
                 <md-select v-model="select_weekly_month" name="월" id="month">
-                  <md-option v-for="curMonth in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]" :value="curMonth" :key="curMonth">
-                    <label style="line-height: 50px; padding-left: 10px">{{curMonth}}월</label>
+                  <md-option style="line-height: 50px; padding-left: 10px" v-for="curMonth in 12" v-bind:value="curMonth" v-bind:key="curMonth">
+                    {{curMonth}}월
                   </md-option>
                 </md-select>
               </md-field>
@@ -38,8 +38,8 @@
               <md-field>
                 <label for="year">주</label>
                 <md-select v-model="select_weekly_week" name="주" id="week">
-                  <md-option v-for="curWeek in [1, 2, 3, 4, 5]" :value="curWeek" :key="curWeek">
-                    <label style="line-height: 50px; padding-left: 10px">{{curWeek}}주</label>
+                  <md-option style="line-height: 50px; padding-left: 10px" v-for="curWeek in 5" v-bind:value="curWeek" v-bind:key="curWeek">
+                    {{curWeek}}주
                   </md-option>
                 </md-select>
               </md-field>
@@ -50,8 +50,8 @@
               <md-field>
                 <label for="year">연도</label>
                 <md-select v-model="select_monthly_year" name="연도" id="year">
-                  <md-option v-for="curYear in years" :value="curYear" :key="curYear">
-                    <label style="line-height: 50px; padding-left: 10px">{{curYear}}년</label>
+                  <md-option style="line-height: 50px; padding-left: 10px" v-for="curYear in years" :value="curYear" :key="curYear">
+                    {{curYear}}년
                   </md-option>
                 </md-select>
               </md-field>
@@ -60,8 +60,8 @@
               <md-field>
                 <label for="year">월</label>
                 <md-select v-model="select_monthly_month" name="월" id="month">
-                  <md-option v-for="curMonth in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]" :value="curMonth" :key="curMonth">
-                    <label style="line-height: 50px; padding-left: 10px">{{curMonth}}월</label>
+                  <md-option style="line-height: 50px; padding-left: 10px" v-for="curMonth in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]" :value="curMonth" :key="curMonth">
+                    {{curMonth}}월
                   </md-option>
                 </md-select>
               </md-field>
@@ -109,6 +109,7 @@
                 </md-table-row>
               </md-table>
             </div>
+            <md-button v-on:click="print" class="md-raised" v-show="show_download">다운로드</md-button>            
           </md-card-content>
         </md-card>
       </div>
@@ -118,6 +119,7 @@
 
 <script>
 import { AccessTableDaily, AccessTableWeekly, AccessTableMonthly } from "@/components";
+import { encode } from 'punycode';
 const queryString = require('query-string');
 
 export default {
@@ -131,9 +133,17 @@ export default {
     select_monthly_month: null,
     table_data_day: [],
     table_data_week: [],
-    table_data_month: []
+    table_data_month: [],
+    submitted_daily: false,
+    submitted_weekly: false,
+    submitted_monthly: false,
+    show_download: false
   }),
   methods: {
+    select: function (event){
+      this.show_download = (this.radio==="daily" && this.submitted_daily) || (this.radio==="weekly" && this.submitted_weekly) || (this.radio==="monthly" && this.submitted_monthly);
+      return;
+    },
     submit: function (event){
       const url_prefix = "http://192.168.101.198/api/v1";
       let url, date, scope = this.radio, result, response;
@@ -165,12 +175,14 @@ export default {
               for (let i = 0; i < tmp.result.length; i++){
                 self.table_data_day.push(tmp.result[i]);
               }
+              this.submitted_daily = true;
               console.log(self.table_data_day);
             }
             else {
               alert("조회하려면 로그인이 필요합니다.");
               this.$router.push({name: '로그인'});
             }
+            this.select();
           }).catch(e => console.log(e));
           break;
         case "weekly":
@@ -199,11 +211,13 @@ export default {
                 self.table_data_week.push(tmp.result[i]);
               }
               console.log(self.table_data_week);
+              this.submitted_weekly = true;
             }
             else {
               alert("조회하려면 로그인이 필요합니다.");
               this.$router.push('login');
             }
+            this.select();
           }).catch(e => console.log(e));
           break;
         case "monthly":
@@ -224,6 +238,7 @@ export default {
               "Accept": "application/json"
             }
           }).then( async res => {
+ 
             if (res.status === 200){
               let tmp = await res.json();
               tmp = JSON.parse(JSON.stringify(tmp));
@@ -231,12 +246,14 @@ export default {
               for (let i = 0; i < tmp.result.length; i++){
                 self.table_data_month.push(tmp.result[i]);
               }
+              this.submitted_monthly = true;
               console.log(self.table_data_month);
             }
             else {
               alert("조회하려면 로그인이 필요합니다.");
               this.$router.push("로그인");
             }
+            this.select();
           }).catch(e => console.log(e));
           break;
         default: 
@@ -244,6 +261,50 @@ export default {
           break;
       }
 
+
+    },
+    print: function (event) {
+      console.log("csv print function");
+      let data, csv, title;
+      if (this.radio === "daily"){
+        data = this.table_data_day;
+        csv = '"이름","일시","총 근무 시간","출근 시간","퇴근 시간"\n';
+        for (let i = 0; i < data.length; i++ ){
+          csv += `"${data[i].name}",`;
+          csv += `"${data[i].date}",`;
+          csv += `"${data[i].duration}",`;
+          csv += `"${data[i].attend}",`;
+          csv += `"${data[i].goHome}"\n`;
+        }
+        title = `일별조회_${data[0].date}.csv`;
+      }
+      else if (this.radio === "weekly"){
+        data = this.table_data_week;
+        csv = '"이름","해당연월","해당 주","총 근무 시간"\n';
+        for (let i = 0; i < data.length; i++ ){
+          csv += `"${data[i].name}",`;
+          csv += `"${data[i].date}",`;
+          csv += `"${data[i].week}",`;
+          csv += `"${data[i].duration}"\n`;
+        }
+        title = `주별조회_${data[0].date}.csv`;
+      }
+      else if (this.radio === "monthly"){
+        data = this.table_data_month;
+        csv = '"이름","해당 연월","총 근무 시간"\n';
+        for (let i = 0; i < data.length; i++ ){
+          csv += `"${data[i].name}",`;
+          csv += `"${data[i].date}",`;
+          csv += `"${data[i].duration}"\n`;
+        }
+        title = `월별조회_${data[0].date}.csv`;
+      }
+      console.log(csv);
+      let hiddenElement = document.createElement('a');
+      hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+      hiddenElement.target = '_blank';
+      hiddenElement.download = title;
+      hiddenElement.click();
     }
   },
   components: {

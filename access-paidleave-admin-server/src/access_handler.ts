@@ -354,7 +354,7 @@ export default class AccessHandler {
           }
           const data = {
             "name": name.split('.')[0],
-            "date": date,
+            "date": `${year}년 ${month}월 ${day}일`,
             "duration": res.duration,
             "attend": res.attend,
             "goHome": res.goHome
@@ -392,7 +392,7 @@ export default class AccessHandler {
           }
           const data = {
             "name": name.split('.')[0],
-            "date": date,
+            "date": `${year}년 ${month}월`,
             "duration": res.duration
           };
           resultList.push(data);

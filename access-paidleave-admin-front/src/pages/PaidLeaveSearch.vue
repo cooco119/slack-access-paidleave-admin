@@ -28,6 +28,7 @@
                 </md-table-row>
               </md-table>
             </div>
+            <md-button v-on:click="print" class="md-raised" v-show="show_download">다운로드</md-button>     
           </md-card-content>
         </md-card>
       </div>
@@ -42,7 +43,8 @@ const queryString = require('query-string');
 export default {
   data: () => ({
     name: null,
-    table_data: []
+    table_data: [],
+    show_download: false
   }),
   components: {
     PaidleaveTable
@@ -78,12 +80,32 @@ export default {
             }
           }
           console.log(self.table_data);
+          this.show_download = true;
         }
         else{
           alert("조회하려면 로그인이 필요합니다");
           this.$router.push({name: '로그인'});
         }
       })
+    },
+    print: function (event) {
+      console.log("csv print function");
+      let data, csv, title;
+      data = this.table_data;
+      csv = '"이름","해당일시","종류","누적"\n';
+      for (let i = 0; i < data.length; i++ ){
+        csv += `"${data[i].name}",`;
+        csv += `"${data[i].date}",`;
+        csv += `"${data[i].type}",`;
+        csv += `"${data[i].cummulate}"\n`;
+      }
+      title = `연차조회_전체_${data[0].name}.csv`;
+      console.log(csv);
+      let hiddenElement = document.createElement('a');
+      hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+      hiddenElement.target = '_blank';
+      hiddenElement.download = title;
+      hiddenElement.click();
     }
   },
   computed: {
