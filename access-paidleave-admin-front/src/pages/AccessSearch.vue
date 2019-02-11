@@ -37,8 +37,19 @@
                   <md-table-cell md-label="이름">{{ item.name }}</md-table-cell>
                   <md-table-cell md-label="일시">{{ item.date }}</md-table-cell>
                   <md-table-cell md-label="종류">{{ item.type }}</md-table-cell>
-                  <md-table-cell md-label="수정"></md-table-cell>
-                  <md-table-cell md-label="삭제"></md-table-cell>
+                  <md-table-cell md-label="">
+                    <div class="md-collapse">
+                      <md-layout>
+                        <md-layout-item class="md-column md-button md-icon-button" style="text-align: center; height: 30px" @click="modify">
+                          <md-icon class="material-icons">create</md-icon>
+                        </md-layout-item>
+                        <md-layout-item style="padding: 5px"/>
+                        <md-layout-item class="md-column md-button md-icon-button" style="text-align: center; height: 30px" @click="remove">
+                          <md-icon class="material-icons">clear</md-icon>
+                        </md-layout-item>
+                      </md-layout>
+                    </div>
+                  </md-table-cell>
                 </md-table-row>
               </md-table>
             </div>
@@ -116,6 +127,12 @@ export default {
       hiddenElement.target = '_blank';
       hiddenElement.download = title;
       hiddenElement.click();
+    },
+    modify: function () {
+
+    },
+    remove: function() {
+
     }
   },
   computed: {
