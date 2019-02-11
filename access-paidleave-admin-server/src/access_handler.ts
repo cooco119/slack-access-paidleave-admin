@@ -488,4 +488,48 @@ export default class AccessHandler {
       throw response;
     }
   }
+
+  //@ts-ignore
+  public async history(data){
+    const start = parseInt(data.start);
+    const end = parseInt(data.end);
+    const name = data.name;
+    let curDate: Date;
+
+    let response;
+    const csvfile = this.csvfilePrefix + name + '.csv';
+    let resultData: Array<Object> = [];
+    try{
+      await Papa.parse(fs.readFileSync(csvfile).toString(), {
+        worker: true,
+        // @ts-ignore
+        step: (results) => {
+          let line = results.data[0];
+          curDate = new Date(parseInt(line[1]),parseInt(line[2]) - 1, parseInt(line[3]), parseInt(line[4]), parseInt(line[5]), parseInt(line[6]));
+          if ((curDate.getTime() >= start) && (curDate.getTime() <= end)){
+            let dateStr = curDate.toLocaleDateString().split('/');
+            let tmpData = {
+              "name": name,
+              "date": `${dateStr[2]}년 ${dateStr[0]}월 ${dateStr[1]}일`,
+              "type": line[7]
+            }
+            resultData.push(tmpData);
+          }
+        }
+      })
+    }
+    catch(e) {
+      response = {
+        "msg": "Error occured",
+        "error": e
+      };
+      throw response;
+    }
+    console.log(resultData);
+    response = {
+      "msg": "Success",
+      "data": resultData
+    };
+    return response;
+  }
 }

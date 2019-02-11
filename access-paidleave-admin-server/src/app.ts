@@ -49,6 +49,22 @@ function isLoggedIn(req, res, next){
   }, 100);
 }
 
+//@ts-ignore
+app.get('/history/access', (req, res) => {
+  const data = req.query;
+  (new AccessHandler()).history(data)
+  .then( response => {
+    // @ts-ignore
+    console.log(response);
+    res.status(200).json(response);
+  })
+  // @ts-ignore
+  .catch(e => {
+    console.error(e);
+    res.status(404).json(e);
+  });
+});
+
 // @ts-ignore
 app.post('/insert', (req, res) => {
   const data = req.body;
@@ -150,6 +166,13 @@ app_proxy.post('/signup', passport.authenticate('signup', {
   faliureRedirect: front_url_entry,
   failureFlash: false
 }));
+
+//@ts-ignore
+function passToFront(req, res, next){
+  console.log("Passing to front");
+  console.log(req);
+  return next();
+}
 
 app_proxy.use('/main', proxy(front_url));
 app_proxy.use('/', proxy(front_url));

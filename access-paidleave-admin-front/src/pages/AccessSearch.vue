@@ -67,23 +67,27 @@ export default {
       let url;
       let self = this;
       let data = {
-        "start": this.start,
-        "end": this.end,
+        "start": this.start.getTime(),
+        "end": this.end.getTime(),
         "name": this.name
       }
       url = url_prefix + queryString.stringify(data);
       fetch(url, {
-        method: "GET",
+        method: 'GET',
+        credentials: "include",
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
+          "Accept": "application/json",
+          "content-type": "application/x-www-form-urlencoded; charset=utf-8"
         }
-      }).then( res => {
+      }).then( async res => {
         if (res.status === 200){
-          let resData = res.json();
-          resData.forEach(element => {
+          let resData = await res.json();
+          console.log(resData);
+          resData.data.forEach(element => {
             self.table_data.push(element);
           });
           console.log(self.table_data);
+          self.show_download = true;
         }
         else if (res.status === 401) {
           alert("조회하려면 로그인이 필요합니다.");
