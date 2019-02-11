@@ -39,15 +39,15 @@
                   <md-table-cell md-label="종류">{{ item.type }}</md-table-cell>
                   <md-table-cell md-label="">
                     <div class="md-collapse">
-                      <md-layout>
-                        <md-layout-item class="md-column md-button md-icon-button" style="text-align: center; height: 30px" @click="modify">
+                      <div class="md-layout">
+                        <div class="md-layout-item md-column md-button md-icon-button" style="text-align: center; height: 30px" @click="modify">
                           <md-icon class="material-icons">create</md-icon>
-                        </md-layout-item>
-                        <md-layout-item style="padding: 5px"/>
-                        <md-layout-item class="md-column md-button md-icon-button" style="text-align: center; height: 30px" @click="remove">
+                        </div>
+                        <div class="md-layout-item" style="padding: 5px"/>
+                        <div class="md-layout-item md-column md-button md-icon-button" style="text-align: center; height: 30px" @click="remove">
                           <md-icon class="material-icons">clear</md-icon>
-                        </md-layout-item>
-                      </md-layout>
+                        </div>
+                      </div>
                     </div>
                   </md-table-cell>
                 </md-table-row>
