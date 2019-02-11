@@ -135,6 +135,15 @@ export default {
       this.hour = 0;
     },
     submit: function (event){
+      let check = confirm("다음 내용으로 등록하시겠습니까?.\n" + 
+                `- 분류: ${this.type === 'access' ? "출퇴근" : "휴가"} - ${this.type_access !== null ? this.access_enum[this.type_access] : this.paidleave_enum[this.type_paidleave]}\n` + 
+                `- 날짜: ${this.date.toLocaleDateString()}\n` + 
+                `${this.type === 'access' ? '- 시간: ' + this.hour.toString() + '시 ' + this.minute.toString() + '분\n' : ''}` +
+                `- 이름: ${this.name}`);
+      if (!check){
+        alert("취소되었습니다.");
+        return;
+      }
       const url = "http://192.168.101.198/api/v1/insert";
       let result, response;
       let self = this;
