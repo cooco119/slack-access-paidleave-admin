@@ -54,19 +54,29 @@ app.post('/insert', (req, res) => {
   const data = req.body;
   if (data.scope === 'access'){
     try{
-    let response = (new AccessHandler()).insert(data);
-// @ts-ignore
+      let response = (new AccessHandler()).insert(data);
+      // @ts-ignore
       console.log(response);
       res.status(200).json(response);
     }
-// @ts-ignore
+    // @ts-ignore
     catch(e) {
       console.error(e);
       res.status(404).json(e);
     };
   }
   else if (data.scope === 'paidleave'){
-
+    (new PaidleaveHandler()).insert(data)
+    .then( response => {
+      // @ts-ignore
+      console.log(response);
+      res.status(200).json(response);
+    })
+    // @ts-ignore
+    .catch(e => {
+      console.error(e);
+      res.status(404).json(e);
+    });
   }
   else {
     console.log("Unknown scope");

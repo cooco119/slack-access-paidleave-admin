@@ -448,13 +448,11 @@ export default class AccessHandler {
   //@ts-ignore
   public insert(data){
     let response;
-    console.log("hello access-handler insert");
     try{
       const typeEnum: Object = Object.freeze({"attend": "출근", "goHome": "퇴근", "goOut": "외출", "getIn": "복귀"});
       // @ts-ignore
       const type: string = typeEnum[data.type];
       let date: Date = new Date(data.date);
-      console.log(date.toLocaleDateString());
       const name: string = data.name;
 
       let year: string, month: string, day: string, hour: string, minute: string, second: string;
