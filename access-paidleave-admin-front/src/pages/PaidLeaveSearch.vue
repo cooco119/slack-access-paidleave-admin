@@ -79,7 +79,6 @@ export default {
               self.table_data.push(tmp2.message[i]);
             }
           }
-          self.table_data.sort(self.compare);
           console.log(self.table_data);
           this.show_download = true;
         }
@@ -107,28 +106,6 @@ export default {
       hiddenElement.target = '_blank';
       hiddenElement.download = title;
       hiddenElement.click();
-    },
-    compare: function(a, b){
-      const nameA = a.name.toUpperCase();
-      const nameB = b.name.toUpperCase();
-      const dateA = a.date.toUpperCase();
-      const dateB = b.date.toUpperCase();
-
-      if (nameA > nameB) {
-        return 1;
-      }
-      else if (nameA < nameB) {
-        return -1;
-      }
-      else {
-        if (dateA > dateB){
-          return 1;
-        }
-        else if (dateA < dateB){
-          return -1;
-        }
-        return 0;
-      }
     }
   },
   computed: {
