@@ -47,6 +47,32 @@
             </div>
           </div>
         </div>
+        <div v-show="type === 'access'" style="padding: 10px "/>
+        <div v-show="type === 'access'" class="md-layout-item md-medium-size-100 md-xsmall-size-100 md-size-100">
+          <label style="font-size: 18px;">시간 선택 : &nbsp; &nbsp; &nbsp;</label>
+          <div class="md-layout">
+            <div class="md-layout-item">
+              <md-field>
+                <label>시간</label>
+                <md-select v-model="hour" name="시간" id="hour">
+                  <md-option style="vertical-align: middle; line-height: 50px; padding-left: 10px" v-for="hour in 23" v-bind:value="hour" v-bind:key="hour">
+                    {{hour}}시
+                  </md-option>
+                </md-select>
+              </md-field>
+            </div>
+            <div class="md-layout-item">
+              <md-field>
+                <label>분</label>
+                <md-select v-model="minute" name="분" id="minute">
+                  <md-option style="line-height: 50px; padding-left: 10px" v-for="minute in 59" v-bind:value="minute" v-bind:key="minute">
+                    {{minute}}분
+                  </md-option>
+                </md-select>
+              </md-field>
+            </div>
+          </div>
+        </div>
         <div style="padding: 10px "/>
         <div class="md-layout-item md-medium-size-100 md-xsmall-size-100 md-size-100">
           <label style="font-size: 18px;">분류 선택 : &nbsp; &nbsp; &nbsp;</label>
@@ -77,32 +103,36 @@
 
 <script>
 import { AccessTableDaily, AccessTableWeekly, AccessTableMonthly } from "@/components";
-import { encode } from 'punycode';
 const queryString = require('query-string');
 
 export default {
-  data: () => ({
-    type: "access",
-    select_year: 2015,
-    select_month: 1,
-    select_day: 1,
-    type_access: null,
-    type_paidleave: null,
-    access_enum: Object.freeze({"attend": "출근", "goHome": "퇴근", "goOut": "외출", "getIn": "복귀"}),
-    paidleave_enum: Object.freeze({"full": "연차", "morning": "반차(오전)", "afternoon": "반차(오후)"}),
-    name: null
-  }),
+  data() {
+    return {
+      type: "access",
+      select_year: (new Date()).getFullYear(),
+      select_month: (new Date()).getMonth() + 1,
+      select_day: (new Date()).getDate(),
+      type_access: null,
+      type_paidleave: null,
+      access_enum: Object.freeze({"attend": "출근", "goHome": "퇴근", "goOut": "외출", "getIn": "복귀"}),
+      paidleave_enum: Object.freeze({"full": "연차", "morning": "반차(오전)", "afternoon": "반차(오후)"}),
+      name: null,
+      minute: 0,
+      hour: 0
+  }},
   methods: {
     test: function (event) {
       console.log(this.access_enum[this.type_access]);
     },
     select : function (event) {
-      this.select_year = 2015;
-      this.select_month = 1;
-      this.select_day = 1;
+      this.select_year = (new Date()).getFullYear();
+      this.select_month = (new Date()).getMonth() + 1;
+      this.select_day = (new Date()).getDate();
       this.type_access = null;
       this.type_paidleave = null;
       this.name = null;
+      this.minute = 0;
+      this.hour = 0;
     },
     submit: function (event){
       const url_prefix = "http://192.168.101.198/api/v1";
@@ -140,7 +170,9 @@ export default {
                 `- 이름: ${this.name}`);
         }
         else{
-          console.log("Fetch failed.");
+          // alert("데이터를 입력하려면 로그인이 필요합니다");
+          // this.$router.push({name: '로그인'});
+          console.log(res);
         }
       }).catch(err => {
         console.error(err);
@@ -163,7 +195,7 @@ export default {
     },
     date: {
       get: function () {
-        return new Date(this.select_year, this.select_month - 1, this.select_day);
+        return new Date(this.select_year, this.select_month - 1, this.select_day, this.hour, this.minute);
       },
       set: function (val) {
         this.select_year = val.getFullYear();
