@@ -216,8 +216,8 @@ app_proxy.use(passport.session());
 app_proxy.use('/api/v1', isLoggedIn, proxy(api_url));
 
 app_proxy.post('/login', passport.authenticate('login', {
-  successRedirect: 'http://192.168.0.162/main',
-  faliureRedirect: 'http://192.168.0.162/login',
+  successRedirect: 'http://192.168.0.162:81/main',
+  faliureRedirect: 'http://192.168.0.162:81/login',
   failureFlash: false
   //@ts-ignore
 }), (req, res) => {
