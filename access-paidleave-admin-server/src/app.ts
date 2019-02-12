@@ -24,8 +24,8 @@ db.once('open', function(callback){
 })
 require('./config/passport')(passport);
 
-const front_url = "192.168.0.162:8080/main";
-const front_url_entry = "192.168.0.162:8080/login";
+const front_url = "192.168.0.162:8081/main";
+const front_url_entry = "192.168.0.162:8081/login";
 const api_url = "192.168.0.162:8001";
 
 const app = express();
