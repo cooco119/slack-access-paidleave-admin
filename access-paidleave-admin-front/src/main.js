@@ -18,6 +18,7 @@ import MaterialDashboard from "./material-dashboard";
 import Chartist from "chartist";
 
 import VueMaterial from "vue-material";
+import VModal from "vue-js-modal";
 
 // configure router
 const router = new VueRouter({
@@ -32,6 +33,7 @@ Vue.use(GlobalComponents);
 Vue.use(GlobalDirectives);
 Vue.use(Notifications);
 Vue.use(VueMaterial);
+Vue.use(VModal);
 
 Vue.prototype.$Chartist = Chartist;
 
