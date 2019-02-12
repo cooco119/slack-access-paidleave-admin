@@ -248,6 +248,7 @@ export default {
           let resData = res.json();
           console.log(resData);
           alert("기록 수정 성공");
+          this.submit();
         }
         else if (res.status === 401) {
           alert("수정하려면 로그인이 필요합니다.");
@@ -300,6 +301,7 @@ export default {
           let resData = res.json();
           console.log(resData);
           alert("기록 삭제 성공");
+          this.submit();
         }
         else if (res.status === 401) {
           alert("삭제하려면 로그인이 필요합니다.");

@@ -72,7 +72,14 @@
             <h4 class="title">출입 기록 조회 결과</h4>
           </md-card-header>
           <md-card-content>
-            <md-button v-on:click="print" class="md-raised" v-show="show_download">다운로드</md-button>
+            <div class="md-layout">
+              <div class="md-layout-item md-column">
+              <h4 v-show="show_download">조회 내역</h4>
+              </div>
+              <div class="md-layout-item md-column md-size-25">
+              <md-button v-on:click="print" class="md-raised" v-show="show_download">다운로드</md-button>
+              </div>
+            </div>
             <div>
               <md-table v-model="table_data">
                 <md-table-row slot="md-table-row" slot-scope="{ item }">
@@ -128,6 +135,7 @@ export default {
     submit: function (event){
       const url_prefix = "http://192.168.101.198/api/v1/history/access?";
       let url;
+      this.table_data = [];
       let self = this;
       let data = {
         "start": this.start.getTime(),
@@ -240,6 +248,7 @@ export default {
           let resData = res.json();
           console.log(resData);
           alert("기록 수정 성공");
+          this.submit();
         }
         else if (res.status === 401) {
           alert("수정하려면 로그인이 필요합니다.");
@@ -297,6 +306,7 @@ export default {
           let resData = res.json();
           console.log(resData);
           alert("기록 삭제 성공");
+          this.submit();
         }
         else if (res.status === 401) {
           alert("삭제하려면 로그인이 필요합니다.");

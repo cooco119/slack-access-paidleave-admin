@@ -243,7 +243,7 @@ export default class PaidleaveHandler {
       writer.end();
 
       let self = this;
-      setTimeout((csvfile) => self.sortAndRewrite(csvfile), 2000, csvfile);
+      setTimeout((csvfile) => self.sortAndRewrite(csvfile), 500, csvfile);
     }
     catch(e) {
       response = {
@@ -323,7 +323,7 @@ export default class PaidleaveHandler {
     writer.end();
 
     let self = this;
-    setTimeout((csvfile) => self.sortAndRewrite(csvfile), 2000, csvfile);
+    setTimeout((csvfile) => self.sortAndRewrite(csvfile), 500, csvfile);
 
     response = {
       "msg": "Modifying successed",
