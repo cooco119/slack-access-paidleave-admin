@@ -466,28 +466,13 @@ export default class AccessHandler {
       console.log([name, year, month, day, hour, minute, second, type]);
 
       const csvfile = this.csvfilePrefix + name + '.csv';
-      let fd = undefined;
-      while (fd === undefined){
-        try {
-          fd = fs.openSync(csvfile, 'a');
-        }
-        catch(e) {
-          setTimeout(() => console.log("File access denied"), 100);
-        }
-      }
-      console.log(fd);
-      await fs.appendFileSync(fd, `${name},${year},${month},${day},${hour},${minute},${second},${type}\n`);
+      fs.appendFileSync(csvfile, `${name},${year},${month},${day},${hour},${minute},${second},${type}\n`);
       // let line = [name, year, month, day, hour, minute, second, type];
       // const writer = csvWriter({headers: ['name', 'year', 'month', 'day', 'hour', 'minute', 'second', 'type'], sendHeaders: false});
       // writer.pipe(fs.createWriteStream(csvfile, { flags: 'a' }));
       // writer.write(line);
       // writer.end();
-      
-      if (fd !== undefined){
-        fs.closeSync(fd);
-      }
-
-      await this.sortAndRewrite(csvfile);
+      setTimeout( (csvfile) => this.sortAndRewrite(csvfile), 1000, csvfile);
       response = {
         "msg": "Insert success"
       };
@@ -612,38 +597,79 @@ export default class AccessHandler {
 
   // @ts-ignore
   public async modify(data){
-    const typeEnumRev: Object = Object.freeze({"출근": "attend", "퇴근": "goHome", "외출": "goOut", "복귀": "getIn"});
-    // @ts-ignore
-    data.new.type = typeEnumRev[data.new.type];
-    console.log(data.new.type);
-    let response;
-    return await this.remove(data)
-    .then( async (resRm) => {
-      let resIn = await this.insert(data.new)
-      //@ts-ignore
-      .catch( e => {
-        response = {
-          "msg": "Error in modifying -> inserting",
-          "error": e
+    const name = data.ref.name;
+    const date = new Date(data.ref.date);
+    const type = data.ref.type;
+
+    const n_name = data.new.name;
+    const n_date = new Date(data.new.date);
+    const n_type = data.new.type;
+
+    const csvfile = this.csvfilePrefix + name + '.csv';
+    const year = date.getFullYear().toString();
+    const month = (date.getMonth() + 1).toString();
+    const day = date.getDate().toString();
+    const hour = date.getHours().toString();
+    const minute = date.getMinutes().toString();
+    const second = date.getSeconds().toString();
+
+    const n_year = n_date.getFullYear().toString();
+    const n_month = n_date.getMonth().toString();
+    const n_day = n_date.getDate().toString();
+    const n_hour = n_date.getHours().toString();
+    const n_minute = n_date.getMinutes().toString();
+    const n_second = n_date.getSeconds().toString();
+
+    let resultData: Array<Array<string>> = [], response;
+    try{
+      await Papa.parse(fs.readFileSync(csvfile).toString(), {
+        worker: true,
+        // @ts-ignore
+        step: (results) => {
+          let line = results.data[0];
+          // console.log("line: ", line);
+          // console.log("rmv : ", [name, year, month, day, hour, minute, second, type]);
+          if ((line[0] === name) && (line[1] === year) &&
+              ((line[2] === month) || (line[2] === '0' + month)) &&
+              ((line[3] === day) || (line[3] === '0' + day)) &&
+              ((line[4] === hour) || (line[4] === '0' + hour)) &&
+              ((line[5] === minute) || (line[5] === '0' + minute)) &&
+              ((line[6] === second) || (line[6] === '0' + second)) &&
+              (line[7] === type)){
+            console.log("Modifying line: ", line);
+            line = [n_name, n_year, n_month, n_day, n_hour, n_minute, n_second, n_type];
+            resultData.push(line);
+          }
+          else if (line[0] === 'name'){
+            console.log("Passing header");
+          }
+          else{
+            resultData.push(line);
+          }
         }
-        throw response;
-      });
-      console.log("resRm: ", resRm);
-      console.log("resIn: ", resIn);
+      })
+    }
+    catch(e) {
       response = {
-        "msg": "Modifying successed",
-        "removeResult": resRm,
-        "insertResult": resIn,
-      };
-      return response;
-    })
-    // @ts-ignore
-    .catch( e => {
-      response = {
-        "msg": "Error in modifying -> removing",
+        "msg": "Error occured modifying",
         "error": e
-      }
+      };
       throw response;
-    });
+    }
+    const writer = csvWriter({headers: ['name', 'year', 'month', 'day', 'hour', 'minute', 'second', 'type'], sendHeaders: true});
+    writer.pipe(fs.createWriteStream(csvfile, { flags: 'w' }));
+    for (let i = 0; i < resultData.length; i++){
+      if (resultData[i][0] === ''){
+        continue;
+      }
+      writer.write(resultData[i]);
+    }
+    writer.end();
+
+    response = {
+      "msg": "Modifying successed",
+      "data": resultData
+    };
+    return response;
   }
 }

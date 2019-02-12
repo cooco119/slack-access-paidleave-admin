@@ -21,6 +21,7 @@ export default class PaidleaveHandler {
         csvdata.push(results.data[0]);
       }
     })
+    console.log(csvdata);
     let dataNoHeader = csvdata.slice(1, csvdata.length-1);
     dataNoHeader.sort((a: Array<string>, b: Array<string>): number => {
       const dateA = new Date(parseInt(a[1]), parseInt(a[2])-1, parseInt(a[3]));
@@ -31,27 +32,34 @@ export default class PaidleaveHandler {
 
       return 0;
     });
-
-    const writer = csvWriter({headers: ['name', 'year', 'month', 'day', 'type', 'used'], sendHeaders: true});
-    writer.pipe(fs.createWriteStream(csv, { flags: 'w' }));
-    dataNoHeader[0][5] = dataNoHeader[0][4] === "연차" ? '1' : '0.5';
-    writer.write(dataNoHeader[0]);
-    for (let i = 1; i < dataNoHeader.length; i++){
-      if (dataNoHeader[i][0] === ''){
-        continue;
+    console.log(dataNoHeader);
+    try{
+      const writer = csvWriter({headers: ['name', 'year', 'month', 'day', 'type', 'used'], sendHeaders: true});
+      writer.pipe(fs.createWriteStream(csv, { flags: 'w' }));
+      dataNoHeader[0][5] = dataNoHeader[0][4] === "연차" ? '1' : '0.5';
+      writer.write(dataNoHeader[0]);
+      for (let i = 1; i < dataNoHeader.length; i++){
+        if (dataNoHeader[i][0] === ''){
+          continue;
+        }
+        // 연도가 바뀔 때 초기화
+        else if (dataNoHeader[i-1][1] !== dataNoHeader[i][1]){
+          dataNoHeader[i][5] = dataNoHeader[i][4] === "연차" ? '1' : '0.5'; 
+          writer.write(dataNoHeader[i]);
+        }
+        else {
+          let lastValue = parseFloat(dataNoHeader[i-1][5]);
+          dataNoHeader[i][5] = dataNoHeader[i][4] === "연차" ? (lastValue + 1).toString() : (lastValue + 0.5).toString(); 
+          writer.write(dataNoHeader[i]);
+        }
       }
-      // 연도가 바뀔 때 초기화
-      else if (dataNoHeader[i-1][1] !== dataNoHeader[i][1]){
-        dataNoHeader[i][5] = dataNoHeader[i][4] === "연차" ? '1' : '0.5'; 
-        writer.write(dataNoHeader[i]);
-      }
-      else {
-        let lastValue = parseFloat(dataNoHeader[i-1][5]);
-        dataNoHeader[i][5] = dataNoHeader[i][4] === "연차" ? (lastValue + 1).toString() : (lastValue + 0.5).toString(); 
-        writer.write(dataNoHeader[i]);
-      }
+      writer.end();
     }
-    writer.end();
+    catch(e) {
+      console.log(e);
+      throw e;
+    }
+    return;
 
   }
 
@@ -181,9 +189,9 @@ export default class PaidleaveHandler {
 
   //@ts-ignore
   public async remove(data){
-    const name = data.ref.name;
-    const date = new Date(data.ref.name);
-    const type = data.ref.type;
+    const name = data.name;
+    const date = new Date(data.date);
+    const type = data.type;
 
     const year = date.getFullYear().toString();
     const month = (date.getMonth() + 1).toString();
@@ -197,6 +205,8 @@ export default class PaidleaveHandler {
         // @ts-ignore
         step: (results) => {
           let line = results.data[0];
+          // console.log("line: ", line);
+          // console.log("rmv : ", [name, year, month, day, type]);
           if ((line[0] === name) && (line[1] === year) &&
               ((line[2] === month) || (line[2] === '0' + month)) &&
               ((line[3] === day) || (line[3] === '0' + day)) &&
@@ -221,15 +231,27 @@ export default class PaidleaveHandler {
     }
     console.log(resultData);
 
-    const writer = csvWriter({headers: ['name', 'year', 'month', 'day', 'hour', 'minute', 'second', 'type'], sendHeaders: true});
-    writer.pipe(fs.createWriteStream(csvfile, { flags: 'w' }));
-    for (let i = 0; i < resultData.length; i++){
-      if (resultData[i][0] === ''){
-        continue;
+    try{
+      const writer = csvWriter({headers: ['name', 'year', 'month', 'type', 'used'], sendHeaders: true});
+      writer.pipe(fs.createWriteStream(csvfile, { flags: 'w' }));
+      for (let i = 0; i < resultData.length; i++){
+        if (resultData[i][0] === ''){
+          continue;
+        }
+        writer.write(resultData[i]);
       }
-      writer.write(resultData[i]);
+      writer.end();
+
+      let self = this;
+      setTimeout((csvfile) => self.sortAndRewrite(csvfile), 2000, csvfile);
     }
-    writer.end();
+    catch(e) {
+      response = {
+        "msg": "Error removing paidleave",
+        "error": e
+      };
+      throw response;
+    }
     
     response = {
       "msg": "Removing successed",

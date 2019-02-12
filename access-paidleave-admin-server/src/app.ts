@@ -117,7 +117,7 @@ app.post('/history/remove', (req, res) => {
     });
   }
   else if (data.scope === 'paidleave'){
-    (new PaidleaveHandler()).remove(data)
+    (new PaidleaveHandler()).remove(data.ref)
     .then( response => {
       // @ts-ignore
       console.log(response);

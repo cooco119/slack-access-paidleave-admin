@@ -218,27 +218,18 @@ export default {
         return;
       }
       const url = "http://192.168.101.198/api/v1/history/modify";
-      let year, month, day, time, hour, minute, second;
-      [year, month, day, time] = this.oldData.date.split(' ');
+      let year, month, day;
+      [year, month, day] = this.oldData.date.split(' ');
       year = parseInt(year.substring(0, year.length - 1));
       month = parseInt(month.substring(0, month.length - 1)) - 1;
       day = parseInt(day.substring(0, day.length - 1));
+      this.oldData.date = (new Date(year, month, day)).getTime();
 
-      [hour, minute, second] = time.split('-');
-      hour = parseInt(hour);
-      minute = parseInt(minute);
-      second = parseInt(second);
-      this.oldData.date = (new Date(year, month, day, hour, minute, second)).getTime();
-      [year, month, day, time] = this.newData.date.split(' ');
+      [year, month, day] = this.newData.date.split(' ');
       year = parseInt(year.substring(0, year.length - 1));
       month = parseInt(month.substring(0, month.length - 1)) - 1;
       day = parseInt(day.substring(0, day.length - 1));
-
-      [hour, minute, second] = time.split('-');
-      hour = parseInt(hour);
-      minute = parseInt(minute);
-      second = parseInt(second);
-      this.newData.date = (new Date(year, month, day, hour, minute, second)).getTime();
+      this.newData.date = (new Date(year, month, day)).getTime();
       let data = {
         "scope": "paidleave",
         "ref" : this.oldData,
@@ -280,24 +271,19 @@ export default {
         alert("취소하였습니다.");
         return;
       }
-      let year, month, day, time, hour, minute, second;
-      [year, month, day, time] = date.split(' ');
+      let year, month, day;
+      [year, month, day] = date.split(' ');
       year = parseInt(year.substring(0, year.length - 1));
       month = parseInt(month.substring(0, month.length - 1)) - 1;
       day = parseInt(day.substring(0, day.length - 1));
 
-      [hour, minute, second] = time.split('-');
-      hour = parseInt(hour);
-      minute = parseInt(minute);
-      second = parseInt(second);
-
-      console.log((new Date(year, month, day, hour, minute, second)).getTime());
+      console.log((new Date(year, month, day)).getTime());
       const url = "http://192.168.101.198/api/v1/history/remove";
       let data = {
         "scope": "paidleave",
         "ref": {
           "name": name,
-          "date": (new Date(year, month, day, hour, minute, second)).getTime(),
+          "date": (new Date(year, month, day)).getTime(),
           "type": type
         }
       };
