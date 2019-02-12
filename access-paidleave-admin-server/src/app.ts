@@ -26,10 +26,10 @@ require('./config/passport')(passport);
 
 const front_url = "192.168.0.162:8080/main";
 const front_url_entry = "192.168.0.162:8080/login";
-const api_url = "192.168.0.162:8000";
+const api_url = "192.168.0.162:8001";
 
 const app = express();
-const port = 8000;
+const port = 8001;
 
 app.use(cors({credentials: true, origin: 'http://192.168.0.162'}));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -196,7 +196,7 @@ http.createServer(app).listen(port, () => {
   console.log(`API server listening on port ${port}`);
 })
 
-const port_proxy = 80;
+const port_proxy = 81;
 const app_proxy = express();
 
 const flash = require('connect-flash');
