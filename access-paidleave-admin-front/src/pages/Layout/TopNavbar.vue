@@ -36,7 +36,7 @@ export default {
       this.$sidebar.displaySidebar(!this.$sidebar.showSidebar);
     },
     logout() {
-      const url_logout = "http://192.168.0.162/logout";
+      const url_logout = "http://192.168.0.162:81/logout";
       fetch(url_logout, {
         method: "POST",
         credentials: "include",

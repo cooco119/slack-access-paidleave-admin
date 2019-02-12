@@ -133,7 +133,7 @@ export default {
   }),
   methods: {
     submit: function (event){
-      const url_prefix = "http://192.168.0.162/api/v1/history/access?";
+      const url_prefix = "http://192.168.0.162:81/api/v1/history/access?";
       let url;
       this.table_data = [];
       let self = this;
@@ -207,7 +207,7 @@ export default {
         alert("취소하였습니다.");
         return;
       }
-      const url = "http://192.168.0.162/api/v1/history/modify";
+      const url = "http://192.168.0.162:81/api/v1/history/modify";
       let year, month, day, time, hour, minute, second;
       [year, month, day, time] = this.oldData.date.split(' ');
       year = parseInt(year.substring(0, year.length - 1));
@@ -284,7 +284,7 @@ export default {
       second = parseInt(second);
 
       console.log((new Date(year, month, day, hour, minute, second)).getTime());
-      const url = "http://192.168.0.162/api/v1/history/remove";
+      const url = "http://192.168.0.162:81/api/v1/history/remove";
       let data = {
         "scope": "access",
         "ref": {

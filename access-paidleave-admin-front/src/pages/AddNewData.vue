@@ -144,7 +144,7 @@ export default {
         alert("취소되었습니다.");
         return;
       }
-      const url = "http://192.168.0.162/api/v1/insert";
+      const url = "http://192.168.0.162:81/api/v1/insert";
       let result, response;
       let self = this;
       let content;
