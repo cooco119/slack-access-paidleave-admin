@@ -262,32 +262,72 @@ export default class PaidleaveHandler {
 
   // @ts-ignore
   public async modify(data){
-    let response;
-    let resRm = await this.remove(data.ref)
-    // @ts-ignore
-    .catch( e => {
-      response = {
-        "msg": "Error in modifying -> removing",
-        "error": e
-      }
-      throw response;
-    });
-    let resIn = await this.insert(data.new)
-    //@ts-ignore
-    .catch( e => {
-      response = {
-        "msg": "Error in modifying -> inserting",
-        "error": e
-      }
-      throw response;
-    });
+    const name = data.ref.name;
+    const date = new Date(data.ref.date);
+    const type = data.ref.type;
 
-    console.log("resRm: ", resRm);
-    console.log("resIn: ", resIn);
+    const n_name = data.new.name;
+    const n_date = new Date(data.new.date);
+    const n_type = data.new.type;
+
+    const csvfile = this.csvfilePrefix + name + '.csv';
+    const year = date.getFullYear().toString();
+    const month = (date.getMonth() + 1).toString();
+    const day = date.getDate().toString();
+
+    const n_year = n_date.getFullYear().toString();
+    const n_month = (n_date.getMonth() + 1).toString();
+    const n_day = n_date.getDate().toString();
+
+    let resultData: Array<Array<string>> = [], response;
+    try{
+      await Papa.parse(fs.readFileSync(csvfile).toString(), {
+        worker: true,
+        // @ts-ignore
+        step: (results) => {
+          let line = results.data[0];
+          // console.log("line: ", line);
+          // console.log("rmv : ", [name, year, month, day, type]);
+          if ((line[0] === name) && (line[1] === year) &&
+              ((line[2] === month) || (line[2] === '0' + month)) &&
+              ((line[3] === day) || (line[3] === '0' + day)) &&
+              (line[4] === type)){
+            console.log("Modifying line: ", line);
+            line = [n_name, n_year, n_month, n_day, n_type, ''];
+            resultData.push(line);
+          }
+          else if (line[0] === 'name'){
+            console.log("Passing header");
+          }
+          else{
+            resultData.push(line);
+          }
+        }
+      })
+    }
+    catch(e) {
+      response = {
+        "msg": "Error occured modifying",
+        "error": e
+      };
+      throw response;
+    }
+    const writer = csvWriter({headers: ['name', 'year', 'month', 'day', 'type', 'used'], sendHeaders: true});
+    writer.pipe(fs.createWriteStream(csvfile, { flags: 'w' }));
+    for (let i = 0; i < resultData.length; i++){
+      if (resultData[i][0] === ''){
+        continue;
+      }
+      writer.write(resultData[i]);
+    }
+    writer.end();
+
+    let self = this;
+    setTimeout((csvfile) => self.sortAndRewrite(csvfile), 2000, csvfile);
+
     response = {
       "msg": "Modifying successed",
-      "removeResult": resRm,
-      "insertResult": resIn,
+      "data": resultData
     };
     return response;
   }
