@@ -48,7 +48,7 @@ export default {
       };
       data = queryString.stringify(data);
       console.log(data);
-      const url_login = "http://192.168.101.198/login";
+      const url_login = "http://192.168.0.162/login";
       fetch(url_login, {
         method: "POST",
         credentials: "include",

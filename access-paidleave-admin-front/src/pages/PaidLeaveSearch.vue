@@ -144,7 +144,7 @@ export default {
   },
   methods: {
     submit: function() {
-      const url_prefix = "http://192.168.101.198/api/v1";
+      const url_prefix = "http://192.168.0.162/api/v1";
       let url;
       let self = this;
       this.table_data = [];
@@ -217,7 +217,7 @@ export default {
         alert("취소하였습니다.");
         return;
       }
-      const url = "http://192.168.101.198/api/v1/history/modify";
+      const url = "http://192.168.0.162/api/v1/history/modify";
       let year, month, day;
       [year, month, day] = this.oldData.date.split(' ');
       year = parseInt(year.substring(0, year.length - 1));
@@ -279,7 +279,7 @@ export default {
       day = parseInt(day.substring(0, day.length - 1));
 
       console.log((new Date(year, month, day)).getTime());
-      const url = "http://192.168.101.198/api/v1/history/remove";
+      const url = "http://192.168.0.162/api/v1/history/remove";
       let data = {
         "scope": "paidleave",
         "ref": {

@@ -144,7 +144,7 @@ export default {
       return;
     },
     submit: function (event){
-      const url_prefix = "http://192.168.101.198/api/v1";
+      const url_prefix = "http://192.168.0.162/api/v1";
       let url, date, scope = this.radio, result, response;
       let self = this;
       switch(this.radio){

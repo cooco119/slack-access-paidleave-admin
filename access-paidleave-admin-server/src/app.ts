@@ -24,14 +24,14 @@ db.once('open', function(callback){
 })
 require('./config/passport')(passport);
 
-const front_url = "192.168.101.198:8080/main";
-const front_url_entry = "192.168.101.198:8080/login";
-const api_url = "192.168.101.198:8000";
+const front_url = "192.168.0.162:8080/main";
+const front_url_entry = "192.168.0.162:8080/login";
+const api_url = "192.168.0.162:8000";
 
 const app = express();
 const port = 8000;
 
-app.use(cors({credentials: true, origin: 'http://192.168.101.198'}));
+app.use(cors({credentials: true, origin: 'http://192.168.0.162'}));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(history());
@@ -200,7 +200,7 @@ const port_proxy = 80;
 const app_proxy = express();
 
 const flash = require('connect-flash');
-app_proxy.use(cors({credentials: true, origin: 'http://192.168.101.198'}));
+app_proxy.use(cors({credentials: true, origin: 'http://192.168.0.162'}));
 app_proxy.use(bodyParser.urlencoded({ extended: false }));
 app_proxy.use(bodyParser.json());
 app_proxy.use(history());
@@ -216,8 +216,8 @@ app_proxy.use(passport.session());
 app_proxy.use('/api/v1', isLoggedIn, proxy(api_url));
 
 app_proxy.post('/login', passport.authenticate('login', {
-  successRedirect: 'http://192.168.101.198/main',
-  faliureRedirect: 'http://192.168.101.198/login',
+  successRedirect: 'http://192.168.0.162/main',
+  faliureRedirect: 'http://192.168.0.162/login',
   failureFlash: false
   //@ts-ignore
 }), (req, res) => {
