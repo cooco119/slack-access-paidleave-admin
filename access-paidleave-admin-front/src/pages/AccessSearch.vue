@@ -72,13 +72,14 @@
             <h4 class="title">출입 기록 조회 결과</h4>
           </md-card-header>
           <md-card-content>
+            <md-button v-on:click="print" class="md-raised" v-show="show_download">다운로드</md-button>
             <div>
               <md-table v-model="table_data">
                 <md-table-row slot="md-table-row" slot-scope="{ item }">
                   <md-table-cell md-label="이름">{{ item.name }}</md-table-cell>
                   <md-table-cell md-label="일시">{{ item.date }}</md-table-cell>
                   <md-table-cell md-label="종류">{{ item.type }}</md-table-cell>
-                  <md-table-cell md-label="">
+                  <md-table-cell md-label="수정/삭제">
                     <div class="md-collapse">
                       <div class="md-layout">
                         <div class="md-layout-item md-column md-button md-icon-button" style="text-align: center; height: 30px" @click="showModal('modify', item.name, item.date, item.type)">
@@ -93,8 +94,7 @@
                   </md-table-cell>
                 </md-table-row>
               </md-table>
-            </div>
-            <md-button v-on:click="print" class="md-raised" v-show="show_download">다운로드</md-button>            
+            </div>        
           </md-card-content>
         </md-card>
       </div>
@@ -200,11 +200,33 @@ export default {
         return;
       }
       const url = "http://192.168.101.198/api/v1/history/modify";
+      let year, month, day, time, hour, minute, second;
+      [year, month, day, time] = this.oldData.date.split(' ');
+      year = parseInt(year.substring(0, year.length - 1));
+      month = parseInt(month.substring(0, month.length - 1)) - 1;
+      day = parseInt(day.substring(0, day.length - 1));
+
+      [hour, minute, second] = time.split('-');
+      hour = parseInt(hour);
+      minute = parseInt(minute);
+      second = parseInt(second);
+      this.oldData.date = (new Date(year, month, day, hour, minute, second)).getTime();
+      [year, month, day, time] = this.newData.date.split(' ');
+      year = parseInt(year.substring(0, year.length - 1));
+      month = parseInt(month.substring(0, month.length - 1)) - 1;
+      day = parseInt(day.substring(0, day.length - 1));
+
+      [hour, minute, second] = time.split('-');
+      hour = parseInt(hour);
+      minute = parseInt(minute);
+      second = parseInt(second);
+      this.newData.date = (new Date(year, month, day, hour, minute, second)).getTime();
       let data = {
         "scope": "access",
         "ref" : this.oldData,
         "new" : this.newData
       };
+      console.log("data.ref.name: ", data.ref.name);
       fetch(url, {
         method: "POST",
         credentials: "include",
@@ -230,6 +252,7 @@ export default {
         console.log(e);
         alert("네트워크 에러, 다시 시도해주세요.");
       })
+      this.closeModal();
     },
     remove: function (name, date, type) {
       const check = confirm("다음 내용을 삭제하시겠습니까?\n" + 
@@ -240,12 +263,24 @@ export default {
         alert("취소하였습니다.");
         return;
       }
+      let year, month, day, time, hour, minute, second;
+      [year, month, day, time] = date.split(' ');
+      year = parseInt(year.substring(0, year.length - 1));
+      month = parseInt(month.substring(0, month.length - 1)) - 1;
+      day = parseInt(day.substring(0, day.length - 1));
+
+      [hour, minute, second] = time.split('-');
+      hour = parseInt(hour);
+      minute = parseInt(minute);
+      second = parseInt(second);
+
+      console.log((new Date(year, month, day, hour, minute, second)).getTime());
       const url = "http://192.168.101.198/api/v1/history/remove";
       let data = {
         "scope": "access",
         "ref": {
           "name": name,
-          "date": date,
+          "date": (new Date(year, month, day, hour, minute, second)).getTime(),
           "type": type
         }
       };

@@ -40,67 +40,75 @@ export default class PaidleaveHandler {
       if (dataNoHeader[i][0] === ''){
         continue;
       }
-      let lastValue = parseFloat(dataNoHeader[i-1][5]);
-      dataNoHeader[i][5] = dataNoHeader[i][4] === "연차" ? (lastValue + 1).toString() : (lastValue + 0.5).toString(); 
-      writer.write(dataNoHeader[i]);
+      // 연도가 바뀔 때 초기화
+      else if (dataNoHeader[i-1][1] !== dataNoHeader[i][1]){
+        dataNoHeader[i][5] = dataNoHeader[i][4] === "연차" ? '1' : '0.5'; 
+        writer.write(dataNoHeader[i]);
+      }
+      else {
+        let lastValue = parseFloat(dataNoHeader[i-1][5]);
+        dataNoHeader[i][5] = dataNoHeader[i][4] === "연차" ? (lastValue + 1).toString() : (lastValue + 0.5).toString(); 
+        writer.write(dataNoHeader[i]);
+      }
     }
     writer.end();
 
   }
 
   // @ts-ignore
-  private async handleSearch(name){
-  // @ts-ignore
-    let message = [];
-    let totalUse = '';
-    const targetfile = this.csvfilePrefix + name + '.csv';
-    let data;
+  private async handleSearch(name, start, end){
+    let curDate: Date;
 
+    let response, totalUse;
+    const csvfile = this.csvfilePrefix + name + '.csv';
+    let resultData: Array<Object> = [];
     try{
-      await Papa.parse(fs.readFileSync(targetfile).toString(), {
+      await Papa.parse(fs.readFileSync(csvfile).toString(), {
+        worker: true,
         // @ts-ignore
-        complete: (result) => {
-          const length = result.data.length;
-          console.log(result.data);
-          totalUse = result.data[length-2][5];
-          // @ts-ignore
-          result.data.forEach(element => {
-            if (element.length === 1 || element[0] === 'name'){
-              return;
-            }
-            message.push({
+        step: (results) => {
+          let line = results.data[0];
+          // console.log("line: ", line);
+          curDate = new Date(parseInt(line[1]),parseInt(line[2]) - 1, parseInt(line[3]));
+          // console.log("curDate: ", curDate);
+          if ((curDate.getTime() >= start) && (curDate.getTime() <= end)){
+            let dateStr = curDate.toLocaleDateString().split('/');
+            let tmpData = {
               'name': name,
-              'date': element[1] + '년 ' + element[2] + '월 ' + element[3] +'일',
-              'type': element[4],
-              'cummulate': element[5]
-            });
-          });
+              'date': line[1] + '년 ' + line[2] + '월 ' + line[3] +'일',
+              'type': line[4],
+              'cummulate': line[5]
+            };
+            resultData.push(tmpData);
+          }
         }
-      });
-      data = {
-        "exists": true,
-  // @ts-ignore
-        "message": message
+      })
+      // @ts-ignore
+      totalUse = resultData[resultData.length-1].cummulate;
+    }
+    catch(e) {
+      response = {
+        "msg": "Error occured in paidleave searching",
+        "error": e
       };
+      throw response;
     }
-    catch(e){
-      console.log(e);
-      if (!fs.existsSync(targetfile)){
-        data = {
-          "exists": false
-        };
-      }
-    }
-
-  // @ts-ignore
-    return data;
+    console.log(resultData);
+    response = {
+      "msg": "Success",
+      "data": resultData,
+      "total": totalUse
+    };
+    return response;
   }
   
   // @ts-ignore
   public async handle(data){
+    const start = parseInt(data.start);
+    const end = parseInt(data.end);
     const name = data.name;
 
-    return await this.handleSearch(name)
+    return await this.handleSearch(name, start, end)
   }
 
   //@ts-ignore
@@ -169,5 +177,96 @@ export default class PaidleaveHandler {
       }
       throw response;
     }
+  }
+
+  //@ts-ignore
+  public async remove(data){
+    const name = data.ref.name;
+    const date = new Date(data.ref.name);
+    const type = data.ref.type;
+
+    const year = date.getFullYear().toString();
+    const month = (date.getMonth() + 1).toString();
+    const day = date.getDate().toString();
+
+    const csvfile = this.csvfilePrefix + name + '.csv';
+    let resultData: Array<Array<string>> = [], response;
+    try{
+      await Papa.parse(fs.readFileSync(csvfile).toString(), {
+        worker: true,
+        // @ts-ignore
+        step: (results) => {
+          let line = results.data[0];
+          if ((line[0] === name) && (line[1] === year) &&
+              ((line[2] === month) || (line[2] === '0' + month)) &&
+              ((line[3] === day) || (line[3] === '0' + day)) &&
+              (line[4] === type)){
+            console.log("Passing line: ", line);
+          }
+          else if (line[0] === 'name'){
+            console.log("Passing header");
+          }
+          else{
+            resultData.push(line);
+          }
+        }
+      })
+    }
+    catch(e) {
+      response = {
+        "msg": "Error occured removing",
+        "error": e
+      };
+      throw response;
+    }
+    console.log(resultData);
+
+    const writer = csvWriter({headers: ['name', 'year', 'month', 'day', 'hour', 'minute', 'second', 'type'], sendHeaders: true});
+    writer.pipe(fs.createWriteStream(csvfile, { flags: 'w' }));
+    for (let i = 0; i < resultData.length; i++){
+      if (resultData[i][0] === ''){
+        continue;
+      }
+      writer.write(resultData[i]);
+    }
+    writer.end();
+    
+    response = {
+      "msg": "Removing successed",
+      "data": resultData
+    };
+    return response;
+  }
+
+  // @ts-ignore
+  public async modify(data){
+    let response;
+    let resRm = await this.remove(data.ref)
+    // @ts-ignore
+    .catch( e => {
+      response = {
+        "msg": "Error in modifying -> removing",
+        "error": e
+      }
+      throw response;
+    });
+    let resIn = await this.insert(data.new)
+    //@ts-ignore
+    .catch( e => {
+      response = {
+        "msg": "Error in modifying -> inserting",
+        "error": e
+      }
+      throw response;
+    });
+
+    console.log("resRm: ", resRm);
+    console.log("resIn: ", resIn);
+    response = {
+      "msg": "Modifying successed",
+      "removeResult": resRm,
+      "insertResult": resIn,
+    };
+    return response;
   }
 }

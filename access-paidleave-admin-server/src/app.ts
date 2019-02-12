@@ -66,20 +66,89 @@ app.get('/history/access', (req, res) => {
 });
 
 // @ts-ignore
-app.post('/insert', (req, res) => {
+app.post('/history/modify', (req, res) => {
   const data = req.body;
   if (data.scope === 'access'){
-    try{
-      let response = (new AccessHandler()).insert(data);
+    (new AccessHandler()).modify(data)
+    .then( response => {
       // @ts-ignore
       console.log(response);
       res.status(200).json(response);
-    }
+    })
     // @ts-ignore
-    catch(e) {
+    .catch(e => {
       console.error(e);
       res.status(404).json(e);
-    };
+    });
+  }
+  else if (data.scope === 'paidleave'){
+    (new PaidleaveHandler()).modify(data)
+    .then( response => {
+      // @ts-ignore
+      console.log(response);
+      res.status(200).json(response);
+    })
+    // @ts-ignore
+    .catch(e => {
+      console.error(e);
+      res.status(404).json(e);
+    });
+  }
+  else {
+    res.status(400).status({"error": "Bad request", "msg": "Not a defined scope"});
+  }
+})
+
+// @ts-ignore
+app.post('/history/remove', (req, res) => {
+  const data = req.body;
+  console.log(data);
+  if (data.scope === 'access'){
+    (new AccessHandler()).remove(data)
+    .then( response => {
+      // @ts-ignore
+      console.log(response);
+      res.status(200).json(response);
+    })
+    // @ts-ignore
+    .catch(e => {
+      console.error(e);
+      res.status(404).json(e);
+    });
+  }
+  else if (data.scope === 'paidleave'){
+    (new PaidleaveHandler()).remove(data)
+    .then( response => {
+      // @ts-ignore
+      console.log(response);
+      res.status(200).json(response);
+    })
+    // @ts-ignore
+    .catch(e => {
+      console.error(e);
+      res.status(404).json(e);
+    });
+  }
+  else {
+    res.status(400).status({"error": "Bad request", "msg": "Not a defined scope"});
+  }
+})
+
+// @ts-ignore
+app.post('/insert', (req, res) => {
+  const data = req.body;
+  if (data.scope === 'access'){
+    (new AccessHandler()).insert(data)
+    .then( response => {
+      // @ts-ignore
+      console.log(response);
+      res.status(200).json(response);
+    })
+    // @ts-ignore
+    .catch(e => {
+      console.error(e);
+      res.status(404).json(e);
+    });
   }
   else if (data.scope === 'paidleave'){
     (new PaidleaveHandler()).insert(data)
@@ -116,6 +185,11 @@ app.get('/paidleave', (req, res) => {
     console.log(response);
     res.status(200).json(response);
   })
+  // @ts-ignore
+  .catch(e => {
+    console.error(e);
+    res.status(404).json(e);
+  });
 })
 
 http.createServer(app).listen(port, () => {
