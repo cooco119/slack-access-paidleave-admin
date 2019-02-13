@@ -400,7 +400,7 @@ export default class AccessHandler {
     let result;
 
     const aDayInMs = 1000 * 3600 * 24;
-    const daysDiff = Math.ceil((end.getTime() - start.getTime()) / aDayInMs);
+    let daysDiff = Math.ceil((end.getTime() - start.getTime()) / aDayInMs);
     let curDate: Date = start;
     let daySearchResult;
     try{
@@ -409,6 +409,9 @@ export default class AccessHandler {
       console.log('end    :', end);
       while (curDate >= start && curDate <= end){
         console.log("Inside while loop");
+        if (curDate.getDay() === 6){
+          daysDiff -= 1;
+        }
         try{
           daySearchResult = await this.searchDaily(name + '.csv', curDate.getFullYear().toString(), (curDate.getMonth() + 1).toString(), curDate.getDate().toString())
           //@ts-ignore
@@ -431,7 +434,8 @@ export default class AccessHandler {
           throw result;
         }
         console.log(daySearchResult);
-        total += parseFloat(daySearchResult.duration);
+        let dur = parseFloat(daySearchResult.duration);
+        total += dur >= 0 ? dur : 0;
         curDate = new Date(curDate.getTime() + aDayInMs);
       }
       total = Math.floor(total * 10) / 10;
@@ -450,7 +454,8 @@ export default class AccessHandler {
 
     result = {
       "total": total,
-      "avg": avg
+      "avg": avg,
+      "workDay": daysDiff
     };
     return result;
   }
