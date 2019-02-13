@@ -174,7 +174,7 @@ export default {
   }),
   methods: {
     select: function (event){
-      this.show_download = (this.radio==="daily" && this.submitted_daily) || (this.radio==="weekly" && this.submitted_weekly) || (this.radio==="monthly" && this.submitted_monthly) || (this.radio === "intervalName" && this.submitted_intervalName);
+      this.show_download = (this.radio==="daily" && this.submitted_daily) || (this.radio==="weekly" && this.submitted_weekly) || (this.radio==="monthly" && this.submitted_monthly);
       return;
     },
     submit: function (event){
