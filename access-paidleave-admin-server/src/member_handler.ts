@@ -179,6 +179,7 @@ export default class MemberHandler {
       const name: string = data.name;
       const contact: string = data.contact;
 
+      console.log("appending ", [name, date, contact]);
       fs.appendFileSync(this.csvfile, `${name},${date},${contact}\n`);
       
       response = {

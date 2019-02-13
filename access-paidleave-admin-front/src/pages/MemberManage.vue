@@ -304,8 +304,8 @@ export default {
     },
     insert: function() {
       let check = confirm("다음 내용으로 등록하시겠습니까?.\n" + 
-                `- 이름: ${this.newData.name}` +
-                `- 입사일: ${this.newData.date}` +
+                `- 이름: ${this.newData.name}\n` +
+                `- 입사일: ${this.newData.date}\n` +
                 `- 연락처: ${this.newData.contact}`);
       if (!check){
         alert("취소되었습니다.");
@@ -332,9 +332,10 @@ export default {
         if (res.status === 200){
           console.log(await res.json());
           alert("다음 내용이 성공적으로 등록되었습니다.\n" + 
-                `- 이름: ${this.newData.name}` +
-                `- 입사일: ${this.newData.date}` +
+                `- 이름: ${this.newData.name}\n` +
+                `- 입사일: ${this.newData.date}\n` +
                 `- 연락처: ${this.newData.contact}`);
+          this.getData();
         }
         else if (res.status === 401){
           alert("데이터를 입력하려면 로그인이 필요합니다");
