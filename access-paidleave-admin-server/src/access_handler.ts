@@ -378,11 +378,13 @@ export default class AccessHandler {
     const aDayInMs = 1000 * 3600 * 24;
     const daysDiff = Math.ceil((end.getTime() - start.getTime()) / aDayInMs);
     let curDate: Date = start;
+    let daySearchResult;
     try{
       while (curDate >= start && curDate <= end){
-        let daySearchResult = await this.searchDaily(name, curDate.getFullYear().toString(), (curDate.getMonth() + 1).toString(), curDate.getDate().toString());
+        daySearchResult = await this.searchDaily(name, curDate.getFullYear().toString(), (curDate.getMonth() + 1).toString(), curDate.getDate().toString());
         total += parseFloat(daySearchResult.duration);
         curDate = new Date(curDate.getTime() + aDayInMs);
+        console.log(daySearchResult);
       }
       avg = total / daysDiff;
       console.log('total: ', total);
