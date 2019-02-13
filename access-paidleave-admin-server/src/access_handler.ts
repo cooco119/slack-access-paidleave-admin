@@ -403,6 +403,7 @@ export default class AccessHandler {
     let daysDiff = Math.ceil((end.getTime() - start.getTime()) / aDayInMs);
     let curDate: Date = start;
     let daySearchResult;
+    let workday = 0;
     try{
       console.log('curDate: ', curDate);
       console.log('start  : ', start);
@@ -437,6 +438,9 @@ export default class AccessHandler {
         }
         console.log(daySearchResult);
         let dur = parseFloat(daySearchResult.duration);
+        if (parseFloat(daySearchResult.duration) >= 0) {
+          workday++;
+        }
         total += dur >= 0 ? dur : 0;
         curDate = new Date(curDate.getTime() + aDayInMs);
       }
@@ -457,7 +461,7 @@ export default class AccessHandler {
     result = {
       "total": total,
       "avg": avg,
-      "workDay": daysDiff
+      "workDay": workday
     };
     return result;
   }
