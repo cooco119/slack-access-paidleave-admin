@@ -311,7 +311,7 @@ export default {
       let data = [];
       let url = "192.168.0.162:81/api/v1/members";
 
-      return fetch(url, {
+      return await fetch(url, {
         method: "GET",
         credentials: "include",
         headers: {
