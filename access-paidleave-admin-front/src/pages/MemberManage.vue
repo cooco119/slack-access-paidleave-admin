@@ -296,7 +296,7 @@ export default {
     },
     getData: function () {
       let data = [];
-      let url = "192.168.0.162:81/api/v1/members";
+      let url = "http://192.168.0.162:81/api/v1/members";
 
       fetch(url, {
         method: "GET",
