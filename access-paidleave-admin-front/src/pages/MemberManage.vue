@@ -102,7 +102,8 @@ export default {
       name: null,
       date: null,
       contact: null
-    }
+    },
+    table_data: []
   }),
   components: {
     PaidleaveTable
@@ -292,7 +293,38 @@ export default {
         console.log(e);
         alert("네트워크 에러, 다시 시도해주세요.");
       });
+    },
+    getData: function () {
+      let data = [];
+      let url = "192.168.0.162:81/api/v1/members";
+
+      fetch(url, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Accept": "application/json"
+        }
+      }).then( async res => {
+        if (res.status === 200){
+          let resData = await res.json();
+          console.log(resData);
+          this.table_data = resData.data;
+        }
+        else if (res.status === 401) {
+          alert("조회하려면 로그인이 필요합니다.");
+          this.$router.push({name: '로그인'});
+        }
+        else {
+          alert("에러 발생\n" + `내용: ${res.json()}`);
+        }
+      }).catch( e => {
+        console.log(e);
+        alert("네트워크 에러, 새로고침 해주세요.");
+      });
     }
+  },
+  beforeMount(){
+    this.getData();
   },
   computed: {
     years: function (){
@@ -306,35 +338,6 @@ export default {
     curYear: function() {
       if (this.start !== null) return this.start.getFullYear();
       return null;
-    },
-    table_data: function () {
-      let data = [];
-      let url = "192.168.0.162:81/api/v1/members";
-
-      return await fetch(url, {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Accept": "application/json"
-        }
-      }).then( async res => {
-        if (res.status === 200){
-          let resData = await res.json();
-          console.log(resData);
-          return resData.data;
-        }
-        else if (res.status === 401) {
-          alert("조회하려면 로그인이 필요합니다.");
-          this.$router.push({name: '로그인'});
-        }
-        else {
-          alert("에러 발생\n" + `내용: ${res.json()}`);
-        }
-      }).catch( e => {
-        console.log(e);
-        alert("네트워크 에러, 새로고침 해주세요.");
-      });
-      
     }
   }
 
