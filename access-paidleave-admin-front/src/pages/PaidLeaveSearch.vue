@@ -221,13 +221,12 @@ export default {
       const url = "http://192.168.0.162:81/api/v1/history/modify";
       let year, month, day, localTime;
       [year, month, day] = this.oldData.date.split(' ');
-      console.log('old', this.oldData.date);
-      console.log('new', this.newData.date);
       year = parseInt(year.substring(0, year.length - 1));
       month = parseInt(month.substring(0, month.length - 1)) - 1;
       day = parseInt(day.substring(0, day.length - 1));
       localTime = (new Date(year, month, day));
       this.oldData.date = localTime.getTime() - (localTime.getTimezoneOffset() * 60 * 1000);
+      console.log('old: ', this.oldData.date);
 
       [year, month, day] = this.newData.date.split(' ');
       year = parseInt(year.substring(0, year.length - 1));
@@ -235,6 +234,7 @@ export default {
       day = parseInt(day.substring(0, day.length - 1));
       localTime = (new Date(year, month, day));
       this.newData.date = localTime.getTime() - (localTime.getTimezoneOffset() * 60 * 1000);
+      console.log('new: ', this.newData.date);
 
       let data = {
         "scope": "paidleave",
