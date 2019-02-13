@@ -184,7 +184,7 @@ export default {
     },
     closeModal: function () {
       this.$modal.hide('modify');
-      this.$modal.hide('remove');
+      this.$modal.hide('insert');
     },
     modify: function () {
       const check = confirm("수정하시겠습니까?");
@@ -336,6 +336,7 @@ export default {
                 `- 입사일: ${this.newData.date}\n` +
                 `- 연락처: ${this.newData.contact}`);
           this.getData();
+          this.closeModal();
         }
         else if (res.status === 401){
           alert("데이터를 입력하려면 로그인이 필요합니다");
