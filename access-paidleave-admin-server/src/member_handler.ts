@@ -21,8 +21,7 @@ export default class MemberHandler {
             console.log("line: ", line);
             let year, month, day;
             [year, month, day] = line[1].split('.');
-            console.log([year, month, day]);
-            let years = Math.floor((new Date()).getTime() - (new Date(parseInt(year), parseInt(month) - 1, parseInt(day)).getTime()) / ( 1000 * 60 * 60 * 24 * 365));
+            let years = (new Date()).getFullYear() - parseInt(year);
             let lineData = {
               "name": line[0],
               "date": line[1],
