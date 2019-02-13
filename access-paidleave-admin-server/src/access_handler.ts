@@ -409,7 +409,9 @@ export default class AccessHandler {
       console.log('end    :', end);
       while (curDate >= start && curDate <= end){
         console.log("Inside while loop");
-        if (curDate.getDay() === 6){
+
+        // 휴일 제외
+        if (curDate.getDay() === 6 || curDate.getDay() === 0){
           daysDiff -= 1;
         }
         try{
