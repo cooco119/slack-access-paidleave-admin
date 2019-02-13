@@ -286,8 +286,8 @@ export default class PaidleaveHandler {
         // @ts-ignore
         step: (results) => {
           let line = results.data[0];
-          // console.log("line: ", line);
-          // console.log("rmv : ", [name, year, month, day, type]);
+          console.log("line: ", line);
+          console.log("rmv : ", [name, year, month, day, type]);
           if ((line[0] === name) && (line[1] === year) &&
               ((line[2] === month) || (line[2] === '0' + month)) &&
               ((line[3] === day) || (line[3] === '0' + day)) &&
