@@ -93,55 +93,64 @@ export default class AccessHandler {
     let outTimeStr = '';
     try {
       resultData.forEach(element => {
-      switch (element[7]){
-        case '출근':
-          attend += 1;
-          attendTime = new Date(parseInt(element[1]),
-                                parseInt(element[2]) - 1,
-                                parseInt(element[3]),
-                                parseInt(element[4]),
-                                parseInt(element[5]),
-                                parseInt(element[6]));
-          break;
-        case '출입':
-          getIn_normal += 1;
-          break;
-        case '퇴근':
-          goHome += 1;
-          goHomeTime = new Date(parseInt(element[1]),
-                                parseInt(element[2]) - 1,
-                                parseInt(element[3]),
-                                parseInt(element[4]),
-                                parseInt(element[5]),
-                                parseInt(element[6]));
-          break;
-        case '외출':
-          goOut += 1;
-          goOutTime = new Date(parseInt(element[1]),
-                                parseInt(element[2]) - 1,
-                                parseInt(element[3]),
-                                parseInt(element[4]),
-                                parseInt(element[5]),
-                                parseInt(element[6]));
-          break;
-        case '복귀':
-          getIn_return += 1;
-          getIn_returnTime = new Date(parseInt(element[1]),
-                                      parseInt(element[2]) - 1,
-                                      parseInt(element[3]),
-                                      parseInt(element[4]),
-                                      parseInt(element[5]),
-                                      parseInt(element[6]));
-          break;
-        default:
-          console.log("No such type");
-      }
-        resultListString += `${element[1]}년 ${element[2]}월 ${element[3]}일 ${element[4]}시 ${element[5]}분 ${element[6]}초 : ${element[7]}\n`
+        switch (element[7]){
+          case '출근':
+            attend += 1;
+            attendTime = new Date(parseInt(element[1]),
+                                  parseInt(element[2]) - 1,
+                                  parseInt(element[3]),
+                                  parseInt(element[4]),
+                                  parseInt(element[5]),
+                                  parseInt(element[6]));
+            break;
+          case '출입':
+            getIn_normal += 1;
+            break;
+          case '퇴근':
+            goHome += 1;
+            goHomeTime = new Date(parseInt(element[1]),
+                                  parseInt(element[2]) - 1,
+                                  parseInt(element[3]),
+                                  parseInt(element[4]),
+                                  parseInt(element[5]),
+                                  parseInt(element[6]));
+            break;
+          case '외출':
+            goOut += 1;
+            goOutTime = new Date(parseInt(element[1]),
+                                  parseInt(element[2]) - 1,
+                                  parseInt(element[3]),
+                                  parseInt(element[4]),
+                                  parseInt(element[5]),
+                                  parseInt(element[6]));
+            break;
+          case '복귀':
+            getIn_return += 1;
+            getIn_returnTime = new Date(parseInt(element[1]),
+                                        parseInt(element[2]) - 1,
+                                        parseInt(element[3]),
+                                        parseInt(element[4]),
+                                        parseInt(element[5]),
+                                        parseInt(element[6]));
+            break;
+          default:
+            console.log("No such type");
+        }
+          resultListString += `${element[1]}년 ${element[2]}월 ${element[3]}일 ${element[4]}시 ${element[5]}분 ${element[6]}초 : ${element[7]}\n`
       });
       let workDuration: number;
       let workDurationStr: string = '';
       let expectedGoHome: Date;
       let remaining: string = '';
+      if (attendTime === null || goHomeTime === null || attend === 0 || goHome === 0){
+        let result = {
+          "duration": -1,
+          "attend": "No data",
+          "goHome": "No data"
+        }
+
+        return result;
+      }
       if (goHome !== 0){
         // @ts-ignore
         workDuration = ((goHomeTime.getTime() - attendTime.getTime())/1000);
