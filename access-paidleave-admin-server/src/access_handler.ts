@@ -406,18 +406,20 @@ export default class AccessHandler {
       console.log('end    :', end);
       while (curDate >= start && curDate <= end){
         console.log("Inside while loop");
-        daySearchResult = await this.searchDaily(name + '.csv', curDate.getFullYear().toString(), (curDate.getMonth() + 1).toString(), curDate.getDate().toString())
+        try{
+          daySearchResult = await this.searchDaily(name + '.csv', curDate.getFullYear().toString(), (curDate.getMonth() + 1).toString(), curDate.getDate().toString());
+        }
         //@ts-ignore
-        .catch( e => {
+        catch( e ) {
           let result = {
             "msg": "Error while calling searchDaily",
             "error": e
           };
           throw result;
-        });
+        };
+        console.log(daySearchResult);
         total += parseFloat(daySearchResult.duration);
         curDate = new Date(curDate.getTime() + aDayInMs);
-        console.log(daySearchResult);
       }
       avg = total / daysDiff;
       console.log('total: ', total);
