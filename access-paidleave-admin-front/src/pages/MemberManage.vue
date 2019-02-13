@@ -42,6 +42,48 @@
       </div>
     </modal>
     
+    <modal width="800" name="insert">
+      <div style="padding: 10px" />
+      <h4 style="padding-left: 20px; padding-up: 50px" class="title">신규 등록</h4>
+      <md-table style="padding-left: 20px">
+        <md-table-row slot="md-table-row">
+          <md-table-cell md-label="이름">
+            <md-field>
+              <label>이름</label>
+              <md-input v-model="newData.name"></md-input>
+            </md-field>
+          </md-table-cell>
+          <md-table-cell md-label="일시">
+            <md-field>
+              <label>입사일</label>
+              <md-input v-model="newData.date"></md-input>
+            </md-field>
+          </md-table-cell>
+          <md-table-cell md-label="종류">
+            <md-field>
+              <label>연락처</label>
+              <md-input v-model="newData.contact"></md-input>
+            </md-field>
+          </md-table-cell>
+        </md-table-row>
+      </md-table>
+      <div style="padding: 20px" />
+      <div class="md-layout">
+        <div class="md-layout-item md-column" style="width: 400px">
+        </div>
+        <div class="md-layout-item md-column md-size-15">
+          <md-button class="md-accent" @click="closeModal">
+            취소
+          </md-button>
+        </div>
+        <div class="md-layout-item md-column md-size-15">
+          <md-button class="md-primary" @click="insert">
+            확인
+          </md-button>
+        </div>
+      </div>
+    </modal>
+    
     <div class="md-layout">
       <div class="md-layout-item md-medium-size-100 md-xsmall-size-100 md-size-100">
         <md-card class="md-card-plain">
@@ -51,6 +93,9 @@
           <md-card-content>
             <div class="md-layout">
               <div class="md-layout-item md-column">
+              </div>
+              <div class="md-layout-item md-column md-size-25">
+              <md-button v-on:click="showModal('insert', null, null, null)" class="md-raised" v-show="show_download">신규 등록</md-button>
               </div>
               <div class="md-layout-item md-column md-size-25">
               <md-button v-on:click="print" class="md-raised" v-show="show_download">다운로드</md-button>
@@ -256,6 +301,52 @@ export default {
         console.log(e);
         alert("네트워크 에러, 새로고침 해주세요.");
       });
+    },
+    insert: function() {
+      let check = confirm("다음 내용으로 등록하시겠습니까?.\n" + 
+                `- 이름: ${this.newData.name}` +
+                `- 입사일: ${this.newData.date}` +
+                `- 연락처: ${this.newData.contact}`);
+      if (!check){
+        alert("취소되었습니다.");
+        return;
+      }
+      const url = "http://192.168.0.162:81/api/v1/insert";
+      let result, response;
+      let self = this;
+      let content = {
+        "scope": "members",
+        "name": this.newData.name,
+        "date": this.newData.date,
+        "contact": this.newData.contact
+      };
+      fetch(url, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(content)
+      }).then( async res => {
+        if (res.status === 200){
+          console.log(await res.json());
+          alert("다음 내용이 성공적으로 등록되었습니다.\n" + 
+                `- 이름: ${this.newData.name}` +
+                `- 입사일: ${this.newData.date}` +
+                `- 연락처: ${this.newData.contact}`);
+        }
+        else if (res.status === 401){
+          alert("데이터를 입력하려면 로그인이 필요합니다");
+          this.$router.push({name: '로그인'});
+          console.log(res);
+        }
+        else {
+          alert("에러 발생\n" + `에러 내용: ${res.json().error}`);
+        }
+      }).catch(err => {
+        console.error(err);
+      })
     }
   },
   beforeMount(){

@@ -169,4 +169,29 @@ export default class MemberHandler {
     };
     return response;
   }
+
+  //@ts-ignore
+  public async insert(data){
+    let response;
+    try{
+      // @ts-ignore
+      const date: string = data.date;
+      const name: string = data.name;
+      const contact: string = data.contact;
+
+      fs.appendFileSync(this.csvfile, `${name},${date},${contact}\n`);
+      
+      response = {
+        "msg": "Insert success"
+      };
+      return response;
+    }
+    catch(e) {
+      response = {
+        "msg": "Error occured inserting",
+        "error": e
+      }
+      throw response;
+    }
+  }
 }

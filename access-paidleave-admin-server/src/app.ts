@@ -206,6 +206,19 @@ app.post('/insert', (req, res) => {
       res.status(404).json(e);
     });
   }
+  else if (data.scope === 'members'){
+    (new MemberHandler()).insert(data)
+    .then( response => {
+      // @ts-ignore
+      console.log(response);
+      res.status(200).json(response);
+    })
+    // @ts-ignore
+    .catch(e => {
+      console.error(e);
+      res.status(404).json(e);
+    });
+  }
   else {
     console.log("Unknown scope");
     res.status(404).json({"msg": "Unknown scope"});
