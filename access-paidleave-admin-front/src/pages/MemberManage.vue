@@ -109,42 +109,6 @@ export default {
     PaidleaveTable
   },
   methods: {
-    submit: function() {
-      const url_prefix = "http://192.168.0.162:81/api/v1";
-      let url;
-      let self = this;
-      this.table_data = [];
-      url = url_prefix + '/paidleave?';
-      let data = {
-        "start": this.start.getTime(),
-        "end": this.end.getTime(),
-        "name": this.name
-      }
-      url = url + queryString.stringify(data);
-      fetch(url, {
-        method: 'GET',
-        credentials: "include",
-        headers: {
-          "content-type": "application/x-www-form-urlencoded; charset=utf-8",
-          "Accept": "application/json"
-        }
-      }).then( async res => {
-        if (res.status === 200){
-          let tmp = await res.json();
-          const tmp2 = { ...tmp};
-          self.table_data = tmp2.data;
-          this.show_download = true;
-          this.totalUse = tmp2.total;
-        }
-        else if (res.status === 401) {
-          alert("조회하려면 로그인이 필요합니다.");
-          this.$router.push({name: '로그인'});
-        }
-        else {
-          alert("에러 발생\n" + `내용: ${res.json()}`);
-        }
-      })
-    },
     print: function (event) {
       console.log("csv print function");
       let data, csv, title;
@@ -203,7 +167,7 @@ export default {
           let resData = res.json();
           console.log(resData);
           alert("기록 수정 성공");
-          this.submit();
+          this.getData();
         }
         else if (res.status === 401) {
           alert("수정하려면 로그인이 필요합니다.");
@@ -250,7 +214,7 @@ export default {
           let resData = res.json();
           console.log(resData);
           alert("기록 삭제 성공");
-          this.submit();
+          this.getData();
         }
         else if (res.status === 401) {
           alert("삭제하려면 로그인이 필요합니다.");
@@ -279,6 +243,7 @@ export default {
           let resData = await res.json();
           console.log(resData);
           this.table_data = resData.data;
+          this.show_download = true;
         }
         else if (res.status === 401) {
           alert("조회하려면 로그인이 필요합니다.");
