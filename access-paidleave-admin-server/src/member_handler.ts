@@ -14,17 +14,22 @@ export default class MemberHandler {
         // @ts-ignore
         step: (results) => {
           let line = results.data[0];
-          console.log("line: ", line);
-          let year, month, day;
-          [year, month, day] = line[1].split('.');
-          let years = Math.floor((new Date()).getTime() - (new Date(year, month - 1, day).getTime()) / ( 1000 * 60 * 60 * 24 * 365));
-          let lineData = {
-            "name": line[0],
-            "date": line[1],
-            "contact": line[2],
-            "years": years
-          };
-          resultData.push(line);
+          if (line[0] === 'name'){
+            console.log("Passing header");
+          }
+          else{
+            console.log("line: ", line);
+            let year, month, day;
+            [year, month, day] = line[1].split('.');
+            let years = Math.floor((new Date()).getTime() - (new Date(year, month - 1, day).getTime()) / ( 1000 * 60 * 60 * 24 * 365));
+            let lineData = {
+              "name": line[0],
+              "date": line[1],
+              "contact": line[2],
+              "years": years
+            };
+            resultData.push(line);
+          }
         }
       })
     }
