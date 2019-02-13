@@ -62,6 +62,7 @@ export default class AccessHandler {
           "msg": "Error while parsing csv file",
           "error": e
         };
+        console.log(result);
         throw result;
       })
     }
@@ -70,6 +71,7 @@ export default class AccessHandler {
         "msg": "Error while parsing csv file",
         "error": e
       };
+      console.log(result);
       throw result;
     }
 
@@ -89,6 +91,7 @@ export default class AccessHandler {
         "msg": "Error while parsing csv file",
         "error": e
       };
+      console.log(result);
       throw result;
     }
     let resultListString = '';
@@ -183,6 +186,7 @@ export default class AccessHandler {
         "msg": "Error while searching daily",
         "error": e
       };
+      console.log(result);
       throw result;
     }
   }
@@ -423,6 +427,7 @@ export default class AccessHandler {
               "msg": "Error while calling searchDaily",
               "error": e
             };
+            console.log(result);
             throw result;
           });
         }
@@ -432,6 +437,7 @@ export default class AccessHandler {
             "msg": "Error while calling searchDaily",
             "error": e
           };
+          console.log(result);
           throw result;
         };
         console.log(daySearchResult);
@@ -447,6 +453,7 @@ export default class AccessHandler {
         "msg": "Error occured in searching interval + name",
         "error": e
       };
+      console.log(result);
       throw result;
     }
 
