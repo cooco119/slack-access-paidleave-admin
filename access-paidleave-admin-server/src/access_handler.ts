@@ -394,7 +394,15 @@ export default class AccessHandler {
       console.log('start  : ', start);
       console.log('end    :', end);
       while (curDate >= start && curDate <= end){
-        daySearchResult = await this.searchDaily(name + '.csv', curDate.getFullYear().toString(), (curDate.getMonth() + 1).toString(), curDate.getDate().toString());
+        daySearchResult = await this.searchDaily(name + '.csv', curDate.getFullYear().toString(), (curDate.getMonth() + 1).toString(), curDate.getDate().toString())
+        //@ts-ignore
+        .catch( e => {
+          let result = {
+            "msg": "Error while parsing csv file",
+            "error": e
+          };
+          throw result;
+        });
         total += parseFloat(daySearchResult.duration);
         curDate = new Date(curDate.getTime() + aDayInMs);
         console.log(daySearchResult);
