@@ -68,6 +68,7 @@ app.get('/history/access', (req, res) => {
 // @ts-ignore
 app.post('/history/modify', (req, res) => {
   const data = req.body;
+  console.log(data);
   if (data.scope === 'access'){
     (new AccessHandler()).modify(data)
     .then( response => {
