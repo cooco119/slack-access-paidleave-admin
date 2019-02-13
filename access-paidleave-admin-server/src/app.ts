@@ -2,6 +2,7 @@ import * as bodyParser from 'body-parser';
 import * as logger from 'winston';
 import AccessHandler from './access_handler';
 import PaidleaveHandler from './paidleave_handler';
+import MemberHandler from './member_handler';
 const express = require('express');
 const proxy = require('express-http-proxy');
 const http = require('http');
@@ -48,6 +49,21 @@ function isLoggedIn(req, res, next){
     return res.json(401, {message: 'not found'});
   }, 100);
 }
+
+//@ts-ignore
+app.get('/members', (req, res) => {
+  (new MemberHandler()).handle()
+  .then( response => {
+    // @ts-ignore
+    console.log(response);
+    res.status(200).json(response);
+  })
+  // @ts-ignore
+  .catch(e => {
+    console.error(e);
+    res.status(404).json(e);
+  });
+});
 
 //@ts-ignore
 app.get('/history/access', (req, res) => {
