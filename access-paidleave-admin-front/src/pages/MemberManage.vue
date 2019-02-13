@@ -61,7 +61,7 @@
                 <md-table-row slot="md-table-row" slot-scope="{ item }">
                   <md-table-cell md-label="이름">{{ item.name }}</md-table-cell>
                   <md-table-cell md-label="입사일">{{ item.date }}</md-table-cell>
-                  <md-table-cell md-label="근속 년수">{{ item.years }}</md-table-cell>
+                  <md-table-cell md-label="근속 년수">{{ item.years }} 년차</md-table-cell>
                   <md-table-cell md-label="연락처">{{ item.contact }}</md-table-cell>
                   <md-table-cell md-label="수정/삭제">
                     <div class="md-collapse">
