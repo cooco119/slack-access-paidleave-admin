@@ -151,20 +151,8 @@ export default class AccessHandler {
 
         return result;
       }
-      if (goHome !== 0){
-        // @ts-ignore
-        workDuration = ((goHomeTime.getTime() - attendTime.getTime())/1000);
-      }
-      else if ((attendTime !== null) && (attendTime.getDate() === new Date().getDate())){
-        if (attendTime.getHours() < 12){
-          expectedGoHome = (new Date(attendTime.getTime() + 9*60000));
-        }
-        else {
-          expectedGoHome = (new Date(attendTime.getTime() + 9*60000));
-          remaining = '퇴근까지 얼마나?: ' + (new Date(expectedGoHome.getTime() - attendTime.getTime())).toLocaleTimeString();
-        }
-      }
-      workDuration -= outTime + 3600;
+      // @ts-ignore
+      workDuration = ((goHomeTime.getTime() - attendTime.getTime())/1000) - outTime + 3600;
       if (outTime !== 0){
         const underHourOut = (Math.floor((outTime % 3600) / 360) / 10);
         outTimeStr = (Math.floor(outTime / 3600)).toString() + (underHourOut === 0 ? '' : '.' + underHourOut.toString().split('.')[1]) + '시간';
