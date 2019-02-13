@@ -527,16 +527,19 @@ export default class AccessHandler {
         const start = new Date(parseInt(data.start));
         const end = new Date(parseInt(data.end));
         const name = data.name;
+        let res = null;
 
-        const res = await this.searchIntervalName(start, end, name)
-        .catch( e => {
+        try{
+          res = await this.searchIntervalName(start, end, name);
+        }
+        catch( e ) {
           let response = {
             "msg": "Error serching IntervalName",
             "error": e
           };
           console.log(response);
           throw response;
-        });
+        };
         const response = {
           "msg": "Success searching interval + name",
           "data": res
