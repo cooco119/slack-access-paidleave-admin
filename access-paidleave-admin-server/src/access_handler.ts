@@ -535,7 +535,7 @@ export default class AccessHandler {
             "error": e
           };
           console.log(response);
-          return response;
+          throw response;
         });
         const response = {
           "msg": "Success searching interval + name",
