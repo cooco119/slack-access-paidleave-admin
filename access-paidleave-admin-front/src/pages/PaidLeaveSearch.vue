@@ -221,9 +221,9 @@ export default {
       const url = "http://192.168.0.162:81/api/v1/history/modify";
       let year, month, day;
       [year, month, day] = this.oldData.date.split(' ');
-      year = parseInt(year.substring(0, year.length - 1));
-      month = parseInt(month.substring(0, month.length - 1)) - 1;
-      day = parseInt(day.substring(0, day.length - 1));
+      year = (year.substring(0, year.length - 1));
+      month = (month.substring(0, month.length - 1));
+      day = (day.substring(0, day.length - 1));
       this.oldData.date = {
         "year": year,
         "month": month,
@@ -232,9 +232,9 @@ export default {
       console.log('old: ', this.oldData.date);
 
       [year, month, day] = this.newData.date.split(' ');
-      year = parseInt(year.substring(0, year.length - 1));
-      month = parseInt(month.substring(0, month.length - 1)) - 1;
-      day = parseInt(day.substring(0, day.length - 1));
+      year = (year.substring(0, year.length - 1));
+      month = (month.substring(0, month.length - 1));
+      day = (day.substring(0, day.length - 1));
       this.newData.date = {
         "year": year,
         "month": month,
@@ -286,9 +286,9 @@ export default {
       }
       let year, month, day;
       [year, month, day] = date.split(' ');
-      year = parseInt(year.substring(0, year.length - 1));
-      month = parseInt(month.substring(0, month.length - 1)) - 1;
-      day = parseInt(day.substring(0, day.length - 1));
+      year = (year.substring(0, year.length - 1));
+      month = (month.substring(0, month.length - 1));
+      day = (day.substring(0, day.length - 1));
       const url = "http://192.168.0.162:81/api/v1/history/remove";
       let data = {
         "scope": "paidleave",
