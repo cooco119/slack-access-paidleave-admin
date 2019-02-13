@@ -655,16 +655,16 @@ export default class AccessHandler {
   // @ts-ignore
   public async remove(data){
     const name = data.ref.name;
-    const date = new Date(data.ref.date);
+    const date = data.ref.date;
     const type = data.ref.type;
 
     const csvfile = this.csvfilePrefix + name + '.csv';
-    const year = date.getFullYear().toString();
-    const month = (date.getMonth() + 1).toString();
-    const day = date.getDate().toString();
-    const hour = date.getHours().toString();
-    const minute = date.getMinutes().toString();
-    const second = date.getSeconds().toString();
+    const year = date.year;
+    const month = date.month;
+    const day = date.day;
+    const hour = date.hour;
+    const minute = date.minute;
+    const second = date.second;
     let resultData: Array<Array<string>> = [], response;
     try{
       await Papa.parse(fs.readFileSync(csvfile).toString(), {
@@ -719,27 +719,27 @@ export default class AccessHandler {
   // @ts-ignore
   public async modify(data){
     const name = data.ref.name;
-    const date = new Date(data.ref.date);
+    const date = data.ref.date;
     const type = data.ref.type;
 
     const n_name = data.new.name;
-    const n_date = new Date(data.new.date);
+    const n_date = data.new.date;
     const n_type = data.new.type;
 
     const csvfile = this.csvfilePrefix + name + '.csv';
-    const year = date.getFullYear().toString();
-    const month = (date.getMonth() + 1).toString();
-    const day = date.getDate().toString();
-    const hour = date.getHours().toString();
-    const minute = date.getMinutes().toString();
-    const second = date.getSeconds().toString();
+    const year = date.year;
+    const month = date.month;
+    const day = date.day;
+    const hour = date.hour;
+    const minute = date.minute;
+    const second = date.second;
 
-    const n_year = n_date.getFullYear().toString();
-    const n_month = (n_date.getMonth() + 1).toString();
-    const n_day = n_date.getDate().toString();
-    const n_hour = n_date.getHours().toString();
-    const n_minute = n_date.getMinutes().toString();
-    const n_second = n_date.getSeconds().toString();
+    const n_year = n_date.year;
+    const n_month = n_date.month;
+    const n_day = n_date.day;
+    const n_hour = n_date.hour;
+    const n_minute = n_date.minute;
+    const n_second = n_date.second;
 
     let resultData: Array<Array<string>> = [], response;
     try{

@@ -190,12 +190,12 @@ export default class PaidleaveHandler {
   //@ts-ignore
   public async remove(data){
     const name = data.name;
-    const date = new Date(data.date);
+    const date = data.date;
     const type = data.type;
 
-    const year = date.getFullYear().toString();
-    const month = (date.getMonth() + 1).toString();
-    const day = date.getDate().toString();
+    const year = date.year;
+    const month = date.month;
+    const day = date.day;
 
     const csvfile = this.csvfilePrefix + name + '.csv';
     let resultData: Array<Array<string>> = [], response;
@@ -263,21 +263,21 @@ export default class PaidleaveHandler {
   // @ts-ignore
   public async modify(data){
     const name = data.ref.name;
-    const date = new Date(data.ref.date);
+    const date = data.ref.date
     const type = data.ref.type;
 
     const n_name = data.new.name;
-    const n_date = new Date(data.new.date);
+    const n_date = data.new.date;
     const n_type = data.new.type;
 
     const csvfile = this.csvfilePrefix + name + '.csv';
-    const year = date.getFullYear().toString();
-    const month = (date.getMonth() + 1).toString();
-    const day = date.getDate().toString();
+    const year = date.year;
+    const month = date.month;
+    const day = date.day
 
-    const n_year = n_date.getFullYear().toString();
-    const n_month = (n_date.getMonth() + 1).toString();
-    const n_day = n_date.getDate().toString();
+    const n_year = n_date.year;
+    const n_month = n_date.month;
+    const n_day = n_date.day;
 
     let resultData: Array<Array<string>> = [], response;
     try{

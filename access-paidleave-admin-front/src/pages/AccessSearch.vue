@@ -208,7 +208,7 @@ export default {
         return;
       }
       const url = "http://192.168.0.162:81/api/v1/history/modify";
-      let year, month, day, time, hour, minute, second, localTime;
+      let year, month, day, time, hour, minute, second;
       [year, month, day, time] = this.oldData.date.split(' ');
       year = parseInt(year.substring(0, year.length - 1));
       month = parseInt(month.substring(0, month.length - 1)) - 1;
@@ -218,8 +218,15 @@ export default {
       hour = parseInt(hour);
       minute = parseInt(minute);
       second = parseInt(second);
-      localTime = new Date(year, month, day, hour, minute, second);
-      this.oldData.date = localTime.getTime() - (localTime.getTimezoneOffset() * 60 * 1000);
+      this.oldData.date = {
+        "year": year,
+        "month": month,
+        "day": day,
+        "hour": hour,
+        "minute": minute,
+        "second": second
+      };
+      
       [year, month, day, time] = this.newData.date.split(' ');
       year = parseInt(year.substring(0, year.length - 1));
       month = parseInt(month.substring(0, month.length - 1)) - 1;
@@ -229,8 +236,15 @@ export default {
       hour = parseInt(hour);
       minute = parseInt(minute);
       second = parseInt(second);
-      localTime = new Date(year, month, day, hour, minute, second);
-      this.newData.date = localTime.getTime() - (localTime.getTimezoneOffset() * 60 * 1000);
+      this.newData.date = {
+        "year": year,
+        "month": month,
+        "day": day,
+        "hour": hour,
+        "minute": minute,
+        "second": second
+      };
+
       let data = {
         "scope": "access",
         "ref" : this.oldData,
@@ -285,14 +299,19 @@ export default {
       minute = parseInt(minute);
       second = parseInt(second);
 
-      let localTime = new Date(year, month, day, hour, minute, second);
-      console.log((new Date(year, month, day, hour, minute, second)).getTime());
       const url = "http://192.168.0.162:81/api/v1/history/remove";
       let data = {
         "scope": "access",
         "ref": {
           "name": name,
-          "date": localTime.getTime() - (localTime.getTimezoneOffset() * 60 * 1000),
+          "date": {
+            "year": year,
+            "month": month,
+            "day": day,
+            "hour": hour,
+            "minute": minute,
+            "second": second
+          },
           "type": type
         }
       };
