@@ -55,6 +55,13 @@ export default class AccessHandler {
       step: (results) => {
         csvdata.push(results.data[0]);
       }
+    //@ts-ignore
+    }).catch( e => {
+      let result = {
+        "msg": "Error while parsing csv file",
+        "error": e
+      };
+      throw result;
     })
     let resultData: Array<string> = [];
     let attend = 0, goHome = 0, getIn_normal = 0, getIn_return = 0, goOut = 0;
@@ -152,8 +159,11 @@ export default class AccessHandler {
       return result;
     }
     catch(e) {
-      console.log(e);
-      return null;
+      let result = {
+        "msg": "Error while parsing csv file",
+        "error": e
+      };
+      throw result;
     }
   }
 
@@ -384,7 +394,7 @@ export default class AccessHandler {
       console.log('start  : ', start);
       console.log('end    :', end);
       while (curDate >= start && curDate <= end){
-        daySearchResult = await this.searchDaily(name, curDate.getFullYear().toString(), (curDate.getMonth() + 1).toString(), curDate.getDate().toString());
+        daySearchResult = await this.searchDaily(name + '.csv', curDate.getFullYear().toString(), (curDate.getMonth() + 1).toString(), curDate.getDate().toString());
         total += parseFloat(daySearchResult.duration);
         curDate = new Date(curDate.getTime() + aDayInMs);
         console.log(daySearchResult);
