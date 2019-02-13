@@ -4,14 +4,6 @@
 
     <side-bar>
       <mobile-menu slot="content"></mobile-menu>
-      <!-- <sidebar-link to="/main/dashboard">
-        <md-icon>dashboard</md-icon>
-        <p>대시보드</p>
-      </sidebar-link> -->
-      <!-- <sidebar-link to="/user">
-        <md-icon>person</md-icon>
-        <p>User Profile</p>
-      </sidebar-link> -->
       <sidebar-link to="/main/add">
         <md-icon>event</md-icon>
         <p>출퇴근/휴가 신규 등록</p>
@@ -32,18 +24,6 @@
         <md-icon>list</md-icon>
         <p>직원 정보 조회/변경</p>
       </sidebar-link>
-      <!-- <sidebar-link to="/icons">
-        <md-icon>bubble_chart</md-icon>
-        <p>Icons</p>
-      </sidebar-link>
-      <sidebar-link to="/maps">
-        <md-icon>location_on</md-icon>
-        <p>Maps</p>
-      </sidebar-link>
-      <sidebar-link to="/notifications">
-        <md-icon>notifications</md-icon>
-        <p>Notifications</p>
-      </sidebar-link> -->
     </side-bar>
 
     <div class="main-panel">

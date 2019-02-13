@@ -7,7 +7,7 @@
         </div>
       </a>
 
-      <a href="#/dashboard" class="simple-text logo-normal">
+      <a href="/main" class="simple-text logo-normal">
         {{title}}
       </a>
     </div>
