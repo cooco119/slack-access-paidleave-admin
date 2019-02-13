@@ -49,20 +49,29 @@ export default class AccessHandler {
   private async searchDaily(name, year, month, day){
     const targetfile = this.csvfilePrefix + name;
     let csvdata: Array<Object> = [];
-    await Papa.parse(fs.readFileSync(targetfile).toString(), {
-      worker: true,
-      // @ts-ignore
-      step: (results) => {
-        csvdata.push(results.data[0]);
-      }
-    //@ts-ignore
-    }).catch( e => {
+    try{
+      await Papa.parse(fs.readFileSync(targetfile).toString(), {
+        worker: true,
+        // @ts-ignore
+        step: (results) => {
+          csvdata.push(results.data[0]);
+        }
+      //@ts-ignore
+      }).catch( e => {
+        let result = {
+          "msg": "Error while parsing csv file",
+          "error": e
+        };
+        throw result;
+      })
+    }
+    catch(e) {
       let result = {
         "msg": "Error while parsing csv file",
         "error": e
       };
       throw result;
-    })
+    }
 
     let resultData: Array<string> = [];
     let attend = 0, goHome = 0, getIn_normal = 0, getIn_return = 0, goOut = 0;
@@ -407,7 +416,15 @@ export default class AccessHandler {
       while (curDate >= start && curDate <= end){
         console.log("Inside while loop");
         try{
-          daySearchResult = await this.searchDaily(name + '.csv', curDate.getFullYear().toString(), (curDate.getMonth() + 1).toString(), curDate.getDate().toString());
+          daySearchResult = await this.searchDaily(name + '.csv', curDate.getFullYear().toString(), (curDate.getMonth() + 1).toString(), curDate.getDate().toString())
+          //@ts-ignore
+          .catch( e => {
+            let result = {
+              "msg": "Error while calling searchDaily",
+              "error": e
+            };
+            throw result;
+          });
         }
         //@ts-ignore
         catch( e ) {
