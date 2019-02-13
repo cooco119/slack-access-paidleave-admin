@@ -57,14 +57,7 @@ export default class AccessHandler {
           csvdata.push(results.data[0]);
         }
       //@ts-ignore
-      }).catch( e => {
-        let result = {
-          "msg": "Error while parsing csv file",
-          "error": e
-        };
-        console.log(result);
-        throw result;
-      })
+      });
     }
     catch(e) {
       let result = {
