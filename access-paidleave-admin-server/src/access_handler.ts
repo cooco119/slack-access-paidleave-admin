@@ -146,7 +146,7 @@ export default class AccessHandler {
         // @ts-ignore
         workDuration = ((goHomeTime.getTime() - attendTime.getTime())/1000);
       }
-      else if (attendTime.getDate() === new Date().getDate()){
+      else if ((attendTime !== null) && (attendTime.getDate() === new Date().getDate())){
         if (attendTime.getHours() < 12){
           expectedGoHome = (new Date(attendTime.getTime() + 9*60000));
         }
