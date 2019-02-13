@@ -13,13 +13,13 @@
           </md-table-cell>
           <md-table-cell md-label="일시">
             <md-field>
-              <label>날짜</label>
+              <label>입사일</label>
               <md-input v-model="newData.date"></md-input>
             </md-field>
           </md-table-cell>
           <md-table-cell md-label="종류">
             <md-field>
-              <label>종류</label>
+              <label>연락처</label>
               <md-input v-model="newData.contact"></md-input>
             </md-field>
           </md-table-cell>
@@ -164,10 +164,10 @@ export default {
       hiddenElement.download = title;
       hiddenElement.click();
     },
-    showModal: function (scope, name, date, type){
+    showModal: function (scope, name, date, contact){
       this.oldData.name = this.newData.name = name;
       this.oldData.date = this.newData.date = date;
-      this.oldData.type = this.newData.type = type;
+      this.oldData.contact = this.newData.contact = contact;
       
       this.$modal.show(scope);
 
@@ -184,31 +184,9 @@ export default {
         return;
       }
       const url = "http://192.168.0.162:81/api/v1/history/modify";
-      let year, month, day;
-      [year, month, day] = this.oldData.date.split(' ');
-      year = (year.substring(0, year.length - 1));
-      month = (month.substring(0, month.length - 1));
-      day = (day.substring(0, day.length - 1));
-      this.oldData.date = {
-        "year": year,
-        "month": month,
-        "day": day
-      };
-      console.log('old: ', this.oldData.date);
-
-      [year, month, day] = this.newData.date.split(' ');
-      year = (year.substring(0, year.length - 1));
-      month = (month.substring(0, month.length - 1));
-      day = (day.substring(0, day.length - 1));
-      this.newData.date = {
-        "year": year,
-        "month": month,
-        "day": day
-      };
-      console.log('new: ', this.newData.date);
 
       let data = {
-        "scope": "paidleave",
+        "scope": "members",
         "ref" : this.oldData,
         "new" : this.newData
       };
@@ -240,31 +218,23 @@ export default {
       })
       this.closeModal();
     },
-    remove: function (name, date, type) {
+    remove: function (name, date, contact) {
       const check = confirm("다음 내용을 삭제하시겠습니까?\n" + 
                             `- 이름: ${name}\n` +
                             `- 일시: ${date}\n` +
-                            `- 종류: ${type}`);
+                            `- 종류: ${contact}`);
       if (!check) {
         alert("취소하였습니다.");
         return;
       }
-      let year, month, day;
-      [year, month, day] = date.split(' ');
-      year = (year.substring(0, year.length - 1));
-      month = (month.substring(0, month.length - 1));
-      day = (day.substring(0, day.length - 1));
+      
       const url = "http://192.168.0.162:81/api/v1/history/remove";
       let data = {
-        "scope": "paidleave",
+        "scope": "members",
         "ref": {
           "name": name,
-          "date": {
-            "year": year,
-            "month": month,
-            "day": day
-          },
-          "type": type
+          "date": date,
+          "contact": contact
         }
       };
       fetch(url, {

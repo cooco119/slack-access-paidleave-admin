@@ -111,6 +111,19 @@ app.post('/history/modify', (req, res) => {
       res.status(404).json(e);
     });
   }
+  else if (data.scope === 'members'){
+    (new MemberHandler()).modify(data)
+    .then( response => {
+      // @ts-ignore
+      console.log(response);
+      res.status(200).json(response);
+    })
+    // @ts-ignore
+    .catch(e => {
+      console.error(e);
+      res.status(404).json(e);
+    });
+  }
   else {
     res.status(400).status({"error": "Bad request", "msg": "Not a defined scope"});
   }
@@ -135,6 +148,19 @@ app.post('/history/remove', (req, res) => {
   }
   else if (data.scope === 'paidleave'){
     (new PaidleaveHandler()).remove(data.ref)
+    .then( response => {
+      // @ts-ignore
+      console.log(response);
+      res.status(200).json(response);
+    })
+    // @ts-ignore
+    .catch(e => {
+      console.error(e);
+      res.status(404).json(e);
+    });
+  }
+  else if (data.scope === 'members'){
+    (new MemberHandler()).remove(data)
     .then( response => {
       // @ts-ignore
       console.log(response);
