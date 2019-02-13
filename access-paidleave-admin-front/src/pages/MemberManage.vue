@@ -158,12 +158,12 @@ export default {
       console.log("csv print function");
       let data, csv, title;
       data = this.table_data;
-      csv = '"이름","해당일시","종류","누적"\n';
+      csv = '"이름","입사일","근속년수","연락처"\n';
       for (let i = 0; i < data.length; i++ ){
         csv += `"${data[i].name}",`;
         csv += `"${data[i].date}",`;
-        csv += `"${data[i].type}",`;
-        csv += `"${data[i].cummulate}"\n`;
+        csv += `"${data[i].years}",`;
+        csv += `"${data[i].contact}"\n`;
       }
       title = `직원정보.csv`;
       console.log(csv);
