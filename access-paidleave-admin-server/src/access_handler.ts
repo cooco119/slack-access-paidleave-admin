@@ -429,12 +429,12 @@ export default class AccessHandler {
           };
           console.log(result);
           throw result;
-        };
+        }
         console.log(daySearchResult);
         total += parseFloat(daySearchResult.duration);
         curDate = new Date(curDate.getTime() + aDayInMs);
       }
-      avg = total / daysDiff;
+      avg = Math.floor(total / daysDiff * 10)/10;
       console.log('total: ', total);
       console.log('avg  : ', avg);
     }
