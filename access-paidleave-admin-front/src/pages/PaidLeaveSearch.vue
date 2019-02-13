@@ -225,12 +225,15 @@ export default {
       month = parseInt(month.substring(0, month.length - 1)) - 1;
       day = parseInt(day.substring(0, day.length - 1));
       this.oldData.date = (new Date(year, month, day)).getTime();
+      console.log((new Date(year, month, day)).getTime())
 
       [year, month, day] = this.newData.date.split(' ');
       year = parseInt(year.substring(0, year.length - 1));
       month = parseInt(month.substring(0, month.length - 1)) - 1;
       day = parseInt(day.substring(0, day.length - 1));
       this.newData.date = (new Date(year, month, day)).getTime();
+      console.log((new Date(year, month, day)).getTime())
+
       let data = {
         "scope": "paidleave",
         "ref" : this.oldData,
