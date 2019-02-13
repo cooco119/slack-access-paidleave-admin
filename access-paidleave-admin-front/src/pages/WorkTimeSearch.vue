@@ -134,7 +134,7 @@
             <div v-show="radio === 'intervalName'">
               <div v-show="submitted_intervalName">
                 <label style="font-size: 20px;">{{name}}님 {{(start !== null) ? start.toLocaleDateString() : ''}} ~ {{end !== null ? end.toLocaleDateString() : ''}} 기간 조회 결과</label>
-                <li>조회 기간 근무 가능 일수: {{intervalName_data.workDay}} 일</li>
+                <li>조회 기간 근무 일수: {{intervalName_data.workDay}} 일</li>
                 <li>총 근무 시간: {{intervalName_data.total}} 시간</li>
                 <li>하루 평균 근무 시간: {{intervalName_data.avg}} 시간</li>
               </div>

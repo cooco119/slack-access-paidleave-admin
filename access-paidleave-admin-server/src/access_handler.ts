@@ -445,7 +445,7 @@ export default class AccessHandler {
         curDate = new Date(curDate.getTime() + aDayInMs);
       }
       total = Math.floor(total * 10) / 10;
-      avg = Math.floor(total / daysDiff * 10) / 10;
+      avg = Math.floor(total / workday * 10) / 10;
       console.log('total: ', total);
       console.log('avg  : ', avg);
     }
