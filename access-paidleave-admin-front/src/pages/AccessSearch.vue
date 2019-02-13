@@ -208,7 +208,7 @@ export default {
         return;
       }
       const url = "http://192.168.0.162:81/api/v1/history/modify";
-      let year, month, day, time, hour, minute, second;
+      let year, month, day, time, hour, minute, second, localTime;
       [year, month, day, time] = this.oldData.date.split(' ');
       year = parseInt(year.substring(0, year.length - 1));
       month = parseInt(month.substring(0, month.length - 1)) - 1;
@@ -218,7 +218,8 @@ export default {
       hour = parseInt(hour);
       minute = parseInt(minute);
       second = parseInt(second);
-      this.oldData.date = (new Date(year, month, day, hour, minute, second)).getTime();
+      localTime = new Date(year, month, day, hour, minute, second);
+      this.oldData.date = localTime.getTime() - (localTime.getTimezoneOffset() * 60 * 1000);
       [year, month, day, time] = this.newData.date.split(' ');
       year = parseInt(year.substring(0, year.length - 1));
       month = parseInt(month.substring(0, month.length - 1)) - 1;
@@ -228,7 +229,8 @@ export default {
       hour = parseInt(hour);
       minute = parseInt(minute);
       second = parseInt(second);
-      this.newData.date = (new Date(year, month, day, hour, minute, second)).getTime();
+      localTime = new Date(year, month, day, hour, minute, second);
+      this.newData.date = localTime.getTime() - (localTime.getTimezoneOffset() * 60 * 1000);
       let data = {
         "scope": "access",
         "ref" : this.oldData,
@@ -283,13 +285,14 @@ export default {
       minute = parseInt(minute);
       second = parseInt(second);
 
+      let localTime = new Date(year, month, day, hour, minute, second);
       console.log((new Date(year, month, day, hour, minute, second)).getTime());
       const url = "http://192.168.0.162:81/api/v1/history/remove";
       let data = {
         "scope": "access",
         "ref": {
           "name": name,
-          "date": (new Date(year, month, day, hour, minute, second)).getTime(),
+          "date": localTime.getTime() - (localTime.getTimezoneOffset() * 60 * 1000),
           "type": type
         }
       };

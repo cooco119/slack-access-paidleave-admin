@@ -219,20 +219,22 @@ export default {
         return;
       }
       const url = "http://192.168.0.162:81/api/v1/history/modify";
-      let year, month, day;
+      let year, month, day, localTime;
       [year, month, day] = this.oldData.date.split(' ');
       console.log('old', this.oldData.date);
       console.log('new', this.newData.date);
       year = parseInt(year.substring(0, year.length - 1));
       month = parseInt(month.substring(0, month.length - 1)) - 1;
       day = parseInt(day.substring(0, day.length - 1));
-      this.oldData.date = (new Date(year, month, day)).getTime();
+      localTime = (new Date(year, month, day));
+      this.oldData.date = localTime.getTime() - (localTime.getTimezoneOffset() * 60 * 1000);
 
       [year, month, day] = this.newData.date.split(' ');
       year = parseInt(year.substring(0, year.length - 1));
       month = parseInt(month.substring(0, month.length - 1)) - 1;
       day = parseInt(day.substring(0, day.length - 1));
-      this.newData.date = (new Date(year, month, day)).getTime();
+      localTime = (new Date(year, month, day));
+      this.newData.date = localTime.getTime() - (localTime.getTimezoneOffset() * 60 * 1000);
 
       let data = {
         "scope": "paidleave",
@@ -282,13 +284,14 @@ export default {
       month = parseInt(month.substring(0, month.length - 1)) - 1;
       day = parseInt(day.substring(0, day.length - 1));
 
+      let localTime = (new Date(year, month, day));
       console.log((new Date(year, month, day)).getTime());
       const url = "http://192.168.0.162:81/api/v1/history/remove";
       let data = {
         "scope": "paidleave",
         "ref": {
           "name": name,
-          "date": (new Date(year, month, day)).getTime(),
+          "date": localTime.getTime() - (localTime.getTimezoneOffset() * 60 * 1000),
           "type": type
         }
       };
