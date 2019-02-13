@@ -135,8 +135,8 @@
               <div v-show="submitted_intervalName">
                 <label style="font-size: 20px;">{{name}}님 {{start.toLocaleDateString()}}~{{end.toLocaleDateString()}} 기간 조회 결과</label>
                 <li>조회 기간 일수: {{Math.ceil((end.getTime() - start.getTime()) / (1000 * 3600 * 24))}} 일</li>
-                <li>총 근무 시간: &nbsp; {{intervalName_data.total}} 시간</li>
-                <li>하루 평균 근무 시간: &nbsp; {{intervalName_data.avg}} 시간</li>
+                <li>총 근무 시간: {{intervalName_data.total}} 시간</li>
+                <li>하루 평균 근무 시간: {{intervalName_data.avg}} 시간</li>
               </div>
             </div>
           </md-card-content>
