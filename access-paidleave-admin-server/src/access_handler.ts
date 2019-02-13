@@ -380,6 +380,9 @@ export default class AccessHandler {
     let curDate: Date = start;
     let daySearchResult;
     try{
+      console.log('curDate: ', curDate);
+      console.log('start  : ', start);
+      console.log('end    :', end);
       while (curDate >= start && curDate <= end){
         daySearchResult = await this.searchDaily(name, curDate.getFullYear().toString(), (curDate.getMonth() + 1).toString(), curDate.getDate().toString());
         total += parseFloat(daySearchResult.duration);
