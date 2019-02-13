@@ -6,6 +6,7 @@ import PaidLeavePage from "@/pages/PaidLeaveSearch.vue";
 import LoginPage from "@/pages/LoginPage.vue";
 import AddNewData from "@/pages/AddNewData.vue";
 import AccessPage from "@/pages/AccessSearch.vue";
+import MemberManage from "@/pages/MemberManage.vue";
 
 const routes = [
   {
@@ -43,6 +44,11 @@ const routes = [
         path: "access",
         name: "출입 기록 조회",
         component: AccessPage
+      },
+      {
+        path: "members",
+        name: "직원 정보 조회/변경",
+        component: MemberManage
       }
     ]
   },

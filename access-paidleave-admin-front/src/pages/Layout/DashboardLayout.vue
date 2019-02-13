@@ -28,6 +28,10 @@
         <md-icon>list</md-icon>
         <p>출입 기록 조회</p>
       </sidebar-link>
+      <sidebar-link to="/main/members">
+        <md-icon>list</md-icon>
+        <p>직원 정보 조회/변경</p>
+      </sidebar-link>
       <!-- <sidebar-link to="/icons">
         <md-icon>bubble_chart</md-icon>
         <p>Icons</p>
