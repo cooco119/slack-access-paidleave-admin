@@ -218,7 +218,7 @@ export default {
         alert("취소하였습니다.");
         return;
       }
-      const url = "http://192.168.0.162/api/v1/history/modify";
+      const url = "http://192.168.0.162:81/api/v1/history/modify";
       let year, month, day;
       [year, month, day] = this.oldData.date.split(' ');
       year = parseInt(year.substring(0, year.length - 1));
