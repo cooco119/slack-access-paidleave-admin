@@ -63,20 +63,31 @@ export default class AccessHandler {
       };
       throw result;
     })
+
     let resultData: Array<string> = [];
     let attend = 0, goHome = 0, getIn_normal = 0, getIn_return = 0, goOut = 0;
-    csvdata.forEach(element => {
-      // @ts-ignore
-      if ((element[1] === year || element[1] === '0'+year) && ((element[2] === month) || (element[2] === '0'+month)) && ((element[3] === day) || (element[3] === '0'+day))){
+    try{
+      csvdata.forEach(element => {
         // @ts-ignore
-        resultData.push(element);
-      }
-    });
+        if ((element[1] === year || element[1] === '0'+year) && ((element[2] === month) || (element[2] === '0'+month)) && ((element[3] === day) || (element[3] === '0'+day))){
+          // @ts-ignore
+          resultData.push(element);
+        }
+      });
+    }
+    catch(e) {
+      let result = {
+        "msg": "Error while parsing csv file",
+        "error": e
+      };
+      throw result;
+    }
     let resultListString = '';
     let attendTime: Date = null, goHomeTime: Date = null, goOutTime: Date = null, getIn_returnTime: Date = null;
     let outTime = 0;
     let outTimeStr = '';
-    try {resultData.forEach(element => {
+    try {
+      resultData.forEach(element => {
       switch (element[7]){
         case '출근':
           attend += 1;
