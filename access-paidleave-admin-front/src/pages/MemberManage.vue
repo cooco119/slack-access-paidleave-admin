@@ -165,7 +165,7 @@ export default {
         csv += `"${data[i].type}",`;
         csv += `"${data[i].cummulate}"\n`;
       }
-      title = `연차조회_전체_${data[0].name}.csv`;
+      title = `직원정보.csv`;
       console.log(csv);
       let hiddenElement = document.createElement('a');
       hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
