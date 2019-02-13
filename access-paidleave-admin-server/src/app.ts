@@ -160,7 +160,7 @@ app.post('/history/remove', (req, res) => {
     });
   }
   else if (data.scope === 'members'){
-    (new MemberHandler()).remove(data)
+    (new MemberHandler()).remove(data.ref)
     .then( response => {
       // @ts-ignore
       console.log(response);
