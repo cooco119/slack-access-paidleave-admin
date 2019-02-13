@@ -476,7 +476,7 @@ export default class AccessHandler {
       case 'intervalName':
         console.log("Searching interval + name");
         const start = new Date(parseInt(data.start));
-        const end = new Date(parseInt(data.start));
+        const end = new Date(parseInt(data.end));
         const name = data.name;
 
         const res = await this.searchIntervalName(start, end, name);
