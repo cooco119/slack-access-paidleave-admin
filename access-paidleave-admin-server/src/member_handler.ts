@@ -14,8 +14,8 @@ export default class MemberHandler {
         // @ts-ignore
         step: (results) => {
           let line = results.data[0];
-          if (line[0] === 'name'){
-            console.log("Passing header");
+          if (line[0] === 'name' || line[0] === ''){
+            console.log("Passing line: ", line);
           }
           else{
             console.log("line: ", line);
