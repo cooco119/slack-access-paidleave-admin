@@ -152,7 +152,7 @@ export default class AccessHandler {
         return result;
       }
       // @ts-ignore
-      workDuration = ((goHomeTime.getTime() - attendTime.getTime())/1000) - outTime + 3600;
+      workDuration = ((goHomeTime.getTime() - attendTime.getTime())/1000) - outTime - 3600;
       if (outTime !== 0){
         const underHourOut = (Math.floor((outTime % 3600) / 360) / 10);
         outTimeStr = (Math.floor(outTime / 3600)).toString() + (underHourOut === 0 ? '' : '.' + underHourOut.toString().split('.')[1]) + '시간';
