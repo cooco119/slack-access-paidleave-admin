@@ -144,7 +144,7 @@ export default class AccessHandler {
       let remaining: string = '';
       if (attendTime === null || goHomeTime === null || attend === 0 || goHome === 0){
         let result = {
-          "duration": -1,
+          "duration": '-1',
           "attend": "No data",
           "goHome": "No data"
         }
