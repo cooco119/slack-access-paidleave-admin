@@ -28,7 +28,7 @@ export default class MemberHandler {
               "contact": line[2],
               "years": years
             };
-            resultData.push(line);
+            resultData.push(lineData);
           }
         }
       })
