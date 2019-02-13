@@ -8,6 +8,7 @@
           <md-radio v-on:change="select" v-model="radio" value="daily">일별 조회</md-radio>
           <md-radio v-on:change="select" v-model="radio" value="weekly">주별 조회</md-radio>
           <md-radio v-on:change="select" v-model="radio" value="monthly">월별 조회</md-radio>
+          <md-radio v-on:change="select" v-model="radio" value="intervalName">기간+이름별 조회</md-radio>
         </div>
         <div class="md-layout-item md-medium-size-100 md-xsmall-size-100 md-size-100">
           <md-datepicker v-if="radio === 'daily'" v-model="select_daily">
@@ -67,6 +68,26 @@
               </md-field>
             </div>
           </div>
+          <div v-show="radio === 'intervalName'">
+            <div style="padding: 10px" />
+            <div class="md-layout-item md-medium-size-100 md-xsmall-size-100 md-size-100">
+              <label style="font-size: 18px">조회 기간: &nbsp; &nbsp; &nbsp;</label>
+              <md-datepicker v-model="start">
+                <label>시작</label>
+              </md-datepicker>
+              <md-datepicker v-model="end">
+                <label>종료</label>
+              </md-datepicker>
+            </div>
+            <div style="padding: 10px" />
+            <div class="md-layout-item md-medium-size-100 md-xsmall-size-100 md-size-100">
+              <label style="font-size: 18px">조회할 이름: &nbsp; &nbsp; &nbsp;</label>
+              <md-field>
+                <label>이름</label>
+                <md-input v-model="name" v-on:keydown.enter="submit" ></md-input>
+              </md-field>
+            </div>
+          </div>
         </div>
         </md-card-content>
         <md-card-content>
@@ -79,6 +100,7 @@
             <h4 class="title">근무시간 조회 결과</h4>
           </md-card-header>
           <md-card-content>
+            <md-button v-on:click="print" class="md-raised" v-show="show_download">다운로드</md-button>            
             <div v-show="radio === 'daily'">
               <md-table v-model="table_data_day">
                 <md-table-row slot="md-table-row" slot-scope="{ item }" v-show="parseInt(item.duration) > 0">
@@ -109,7 +131,13 @@
                 </md-table-row>
               </md-table>
             </div>
-            <md-button v-on:click="print" class="md-raised" v-show="show_download">다운로드</md-button>            
+            <div v-show="radio === 'intervalName'">
+              <div v-show="submitted_intervalName">
+                <label style="font-size: 20px;">{{name}}님 {{start}}~{{end}} 기간 조회 결과</label>
+                <li>총 근무 시간: &nbsp; {{intervalName_data.total}}</li>
+                <li>하루 평균 근무 시간: &nbsp; {{intervalName_data.avg}}</li>
+              </div>
+            </div>
           </md-card-content>
         </md-card>
       </div>
@@ -133,14 +161,19 @@ export default {
     table_data_day: [],
     table_data_week: [],
     table_data_month: [],
+    intervalName_data: [],
     submitted_daily: false,
     submitted_weekly: false,
     submitted_monthly: false,
-    show_download: false
+    submitted_intervalName: false,
+    show_download: false,
+    start: null,
+    end: null,
+    name: null
   }),
   methods: {
     select: function (event){
-      this.show_download = (this.radio==="daily" && this.submitted_daily) || (this.radio==="weekly" && this.submitted_weekly) || (this.radio==="monthly" && this.submitted_monthly);
+      this.show_download = (this.radio==="daily" && this.submitted_daily) || (this.radio==="weekly" && this.submitted_weekly) || (this.radio==="monthly" && this.submitted_monthly) || (this.radio === "intervalName" && this.submitted_intervalName);
       return;
     },
     submit: function (event){
@@ -169,7 +202,7 @@ export default {
           }).then( async res => {
             if (res.status === 200){
               let tmp = await res.json();
-              tmp = JSON.parse(JSON.stringify(tmp));
+              tmp = JSON.parse(JSON.stringify(tmp)); // for handle observer
               console.log(tmp.result[0]);
               for (let i = 0; i < tmp.result.length; i++){
                 self.table_data_day.push(tmp.result[i]);
@@ -208,7 +241,7 @@ export default {
           }).then( async res => {
               if (res.status === 200){
               let tmp = await res.json();
-              tmp = JSON.parse(JSON.stringify(tmp));
+              tmp = JSON.parse(JSON.stringify(tmp)); // for handle observer
               console.log(tmp.result);
               for (let i = 0; i < tmp.result.length; i++){
                 self.table_data_week.push(tmp.result[i]);
@@ -248,7 +281,7 @@ export default {
  
             if (res.status === 200){
               let tmp = await res.json();
-              tmp = JSON.parse(JSON.stringify(tmp));
+              tmp = JSON.parse(JSON.stringify(tmp)); // for handle observer
               console.log(tmp.result[0]);
               for (let i = 0; i < tmp.result.length; i++){
                 self.table_data_month.push(tmp.result[i]);
@@ -266,6 +299,41 @@ export default {
             }
             this.select();
           }).catch(e => console.log(e));
+          break;
+        case "intervalName":
+          this.intervalName_data = {};
+          url = url_prefix + '/access?';
+          result = {
+            "scope": "intervalName",
+            "start": this.start.getTime(),
+            "end": this.end.getTime(),
+            "name": this.name
+          };
+          url = url + queryString.stringify(result);
+          fetch(url, {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              "Accept": "applicaion/json",
+              "Content-Type": "application/x-www-form-urlencoded"
+            }
+          }).then( async res => {
+            if (res.status === 200){
+              let data = await res.json();
+              data = JSON.parse(JSON.stringify(data)); // for handle observer
+              this.intervalName_data = data.data;
+              this.submitted_intervalName = true;
+            }
+            else if (res.status === 401) {
+              alert("조회하려면 로그인이 필요합니다.");
+              this.$router.push({name: '로그인'});
+            }
+            else {
+              alert("에러 발생\n" + `내용: ${res.json()}`);
+            }
+            this.select();
+          }).catch(e => console.log(e));
+
           break;
         default: 
           alert("에러, 정확한 입력 필요.");

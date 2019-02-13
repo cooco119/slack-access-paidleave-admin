@@ -371,6 +371,38 @@ export default class AccessHandler {
     }
   }
 
+  private async searchIntervalName(start: Date, end: Date, name: string){
+    let total = 0, avg;
+    let result;
+
+    const aDayInMs = 1000 * 3600 * 24;
+    const daysDiff = Math.ceil((end.getTime() - start.getTime()) / aDayInMs);
+    let curDate: Date = start;
+    try{
+      while (curDate >= start && curDate <= end){
+        let daySearchResult = await this.searchDaily(name, curDate.getFullYear().toString(), (curDate.getMonth() + 1).toString(), curDate.getDate().toString());
+        total += parseFloat(daySearchResult.duration);
+        curDate = new Date(curDate.getTime() + aDayInMs);
+      }
+      avg = total / daysDiff;
+      console.log('total: ', total);
+      console.log('avg  : ', avg);
+    }
+    catch(e) {
+      result = {
+        "msg": "Error occured in searching interval + name",
+        "error": e
+      };
+      throw result;
+    }
+
+    result = {
+      "total": total,
+      "avg": avg
+    };
+    return result;
+  }
+
   // @ts-ignore
   public async handle(data){
     console.log(data);
@@ -434,6 +466,21 @@ export default class AccessHandler {
           };
           resultList.push(data);
         }
+        break;
+
+      case 'intervalName':
+        console.log("Searching interval + name");
+        const start = new Date(data.start);
+        const end = new Date(data.start);
+        const name = data.name;
+
+        const res = await this.searchIntervalName(start, end, name);
+        const response = {
+          "msg": "Success searching interval + name",
+          "data": res
+        };
+        return response;
+        
         break;
 
       default:

@@ -41,6 +41,7 @@
         </div>
       </div>
     </modal>
+    
     <div class="md-layout">
       <md-card>
         <md-card-content>
