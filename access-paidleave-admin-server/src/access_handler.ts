@@ -151,6 +151,18 @@ export default class AccessHandler {
 
         return result;
       }
+      try{
+        if ((goOutTime && getIn_returnTime) && (goOut === getIn_return)){
+          if (goOutTime.getDate() === getIn_returnTime.getDate()){
+            // @ts-ignore
+            outTime += ((getIn_returnTime.getTime() - goOutTime.getTime())/1000);
+            console.log("Outtime calculated: ", outTime);
+          }
+        }
+      }
+      catch(e) {
+        console.log("Error at outtime!", e);
+      }
       // @ts-ignore
       workDuration = ((goHomeTime.getTime() - attendTime.getTime())/1000) - outTime - 3600;
       if (outTime !== 0){
@@ -270,6 +282,18 @@ export default class AccessHandler {
         }
           resultListString += `${element[1]}년 ${element[2]}월 ${element[3]}일 ${element[4]}시 ${element[5]}분 ${element[6]}초 : ${element[7]}\n`;
       });
+      try{
+        if ((goOutTime && getIn_returnTime) && (goOut === getIn_return)){
+          if (goOutTime.getDate() === getIn_returnTime.getDate()){
+            // @ts-ignore
+            outTime += ((getIn_returnTime.getTime() - goOutTime.getTime())/1000);
+            console.log("Outtime calculated: ", outTime);
+          }
+        }
+      }
+      catch(e) {
+        console.log("Error at outtime!", e);
+      }
       workDuration -= outTime + 3600;
       if (outTime !== 0){
         const underHourOut = (Math.floor((outTime % 3600) / 360) / 10);
@@ -372,6 +396,18 @@ export default class AccessHandler {
         }
         resultListString += `${element[1]}년 ${element[2]}월 ${element[3]}일 ${element[4]}시 ${element[5]}분 ${element[6]}초 : ${element[7]}\n`;
       });
+      try{
+        if ((goOutTime && getIn_returnTime) && (goOut === getIn_return)){
+          if (goOutTime.getDate() === getIn_returnTime.getDate()){
+            // @ts-ignore
+            outTime += ((getIn_returnTime.getTime() - goOutTime.getTime())/1000);
+            console.log("Outtime calculated: ", outTime);
+          }
+        }
+      }
+      catch(e) {
+        console.log("Error at outtime!", e);
+      }
       workDuration -= outTime + 3600;
       if (outTime !== 0){
         const underHourOut = (Math.floor((outTime % 3600) / 360) / 10);
