@@ -109,6 +109,7 @@
                   <md-table-cell md-label="총 근무 시간">{{ item.duration }}</md-table-cell>
                   <md-table-cell md-label="출근 시간">{{ item.attend }}</md-table-cell>
                   <md-table-cell md-label="퇴근 시간">{{ item.goHome }}</md-table-cell>
+                  <md-table-cell md-label="외출 시간">{{ item.outTime }}</md-table-cell>
                 </md-table-row>
               </md-table>
             </div>
