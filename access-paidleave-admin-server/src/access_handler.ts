@@ -528,7 +528,8 @@ export default class AccessHandler {
             "date": `${year}년 ${month}월 ${day}일`,
             "duration": res.duration,
             "attend": res.attend,
-            "goHome": res.goHome
+            "goHome": res.goHome,
+            "outTime": res.outTime
           };
           resultList.push(data);
         }
