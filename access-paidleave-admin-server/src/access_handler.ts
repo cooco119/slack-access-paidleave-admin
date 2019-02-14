@@ -786,6 +786,8 @@ export default class AccessHandler {
       writer.write(resultData[i]);
     }
     writer.end();
+    let self = this;
+    setTimeout((csvfile) => self.sortAndRewrite(csvfile), 500, csvfile);
 
     response = {
       "msg": "Modifying successed",
