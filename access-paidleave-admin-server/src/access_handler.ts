@@ -183,6 +183,7 @@ export default class AccessHandler {
         "goHome": goHomeTime.toLocaleTimeString(),
         "outTime": outTimeStr
       }
+      console.log(result);
       return result;
     }
     catch(e) {
