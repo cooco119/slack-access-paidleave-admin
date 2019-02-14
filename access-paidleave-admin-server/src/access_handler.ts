@@ -146,7 +146,8 @@ export default class AccessHandler {
         let result = {
           "duration": '-1',
           "attend": "No data",
-          "goHome": "No data"
+          "goHome": "No data",
+          "outTime": "No data",
         }
 
         return result;
@@ -179,7 +180,8 @@ export default class AccessHandler {
       const result = {
         "duration": workDurationStr,
         "attend": attendTime.toLocaleTimeString(),
-        "goHome": goHomeTime.toLocaleTimeString()
+        "goHome": goHomeTime.toLocaleTimeString(),
+        "outTime": outTimeStr
       }
       return result;
     }
